@@ -1,0 +1,132 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* Warm light palette: cream canvas, Nuln Oil text, Maastricht secondary,
+     Flame → Firewatch → Candle Light warm accents, Bermuda cool counterpoint. */
+  /* NOTE: deliberately no `--color-base` token — Tailwind's `text-base` is a
+     font-size utility, and a base color token makes it resolve to the color. */
+  --color-cream: #fdf6ec; /* cream canvas — a light Candle Light tint */
+  --color-surface: #fae8d2; /* soft candle surface tint for raised elements */
+  --color-ink: #10060b; /* Nuln Oil — headings & primary text */
+  --color-muted: #6e5a60; /* warm plum-gray — secondary text & labels */
+  --color-flame: #f1563b; /* primary accent — CTAs, active states */
+  --color-firewatch: #f28960; /* secondary accent — tags, hover lifts */
+  --color-candle: #f5ac66; /* warm accent — badges, glows */
+}
+
+html,
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overscroll-behavior: none;
+}
+
+/* One warm gradient mesh behind the whole site (the Skills treatment, made
+   global): candle → firewatch → flame corner glows over the cream canvas,
+   fixed to the viewport so every section shares it seamlessly — the pan never
+   crosses a background seam. */
+body {
+  background-image:
+    radial-gradient(55% 70% at 12% 18%, rgba(245, 172, 102, 0.55) 0%, rgba(245, 172, 102, 0) 65%),
+    radial-gradient(45% 60% at 88% 12%, rgba(242, 137, 96, 0.4) 0%, rgba(242, 137, 96, 0) 65%),
+    radial-gradient(55% 75% at 82% 88%, rgba(245, 172, 102, 0.4) 0%, rgba(245, 172, 102, 0) 65%),
+    radial-gradient(45% 60% at 18% 92%, rgba(241, 86, 59, 0.28) 0%, rgba(241, 86, 59, 0) 60%);
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
+}
+
+/* Fine film grain over the whole canvas — keeps the big cream fields from
+   reading flat. Sits above content (below the Intro card), 4% visible,
+   pointer-transparent. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--color-flame);
+  color: var(--color-cream);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Oversized serif display headings (agenius-style) */
+.display-xl {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-size: clamp(3rem, 8.5vw, 8rem);
+}
+
+.display-lg {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+  font-size: clamp(2.25rem, 5.5vw, 5rem);
+}
+
+.font-serif-x {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+/* Oversized serif display for the light "sticker wall" Skills section */
+.display-serif {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  font-size: clamp(2.4rem, 5.5vw, 4.75rem);
+}
+
+/* Underline-draw hover for nav links */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--color-ink);
+  transition: transform 0.3s ease;
+}
+.nav-link:hover::after,
+.nav-link[aria-current='true']::after {
+  transform: scaleX(1);
+}
+
+/* Hide scrollbars inside horizontally scrolled sections without killing scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

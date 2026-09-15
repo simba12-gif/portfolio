@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite *)",
+      "mcp__plugin_ecc_chrome-devtools__new_page",
+      "Bash(npx oxlint *)",
+      "Bash(echo \"EXIT=$?\")",
+      "mcp__plugin_ecc_chrome-devtools__resize_page",
+      "mcp__plugin_ecc_chrome-devtools__take_screenshot",
+      "mcp__plugin_ecc_chrome-devtools__evaluate_script",
+      "mcp__plugin_ecc_chrome-devtools__list_console_messages",
+      "Bash(npm run *)",
+      "Bash(echo \"LINT_EXIT=$?\")",
+      "mcp__plugin_ecc_chrome-devtools__navigate_page",
+      "Bash(identify public/og.png)",
+      "Bash(python3 -c \"from PIL import Image; im=Image.open\\('public/og.png'\\); print\\(im.size\\)\")",
+      "Bash(magick public/og.png -crop 1627x854+87+0 +repage -resize 1200x630! public/og.png)",
+      "Bash(curl -sf -o /dev/null --max-time 10 https://trustfix-tiut.onrender.com/)",
+      "Bash(identify public/projects/*.png)",
+      "Bash(awk '{print $1, $3}')",
+      "Bash(awk '{print $2, $1}')",
+      "Bash(curl -s https://api.github.com/users/simba12-gif)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('repos:', d.get\\('public_repos'\\), '| followers:', d.get\\('followers'\\), '| created:', d.get\\('created_at'\\)\\)\")",
+      "Bash(curl -s -X POST https://leetcode.com/graphql -H 'Content-Type: application/json' -H 'Referer: https://leetcode.com' -d '{\"query\":\"query { matchedUser\\(username: \\\\\"harshita404\\\\\"\\) { profile { ranking } submitStatsGlobal { acSubmissionNum { difficulty count } } } }\"}')",
+      "Bash(gh api *)",
+      "Bash(curl -s \"https://github.com/users/simba12-gif/contributions\")",
+      "Bash(curl -s \"https://github.com/simba12-gif?tab=repositories\")",
+      "Bash(curl -s \"https://github.com/simba12-gif\")",
+      "Bash(curl -sL -H \"X-Requested-With: XMLHttpRequest\" \"https://github.com/users/simba12-gif/contributions?from=2025-09-13\")",
+      "Bash(python3 -)"
+    ]
+  }
+}
