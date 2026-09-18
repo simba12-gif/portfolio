@@ -4,17 +4,17 @@
   --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
-  /* Warm light palette: cream canvas, Nuln Oil text, Maastricht secondary,
-     Flame → Firewatch → Candle Light warm accents, Bermuda cool counterpoint. */
+  /* Sky-blue canvas palette: sky blue canvas, off-white card surfaces,
+     chocolate brown text/icons, butter yellow buttons/CTAs, deeper gold hover. */
   /* NOTE: deliberately no `--color-base` token — Tailwind's `text-base` is a
      font-size utility, and a base color token makes it resolve to the color. */
-  --color-cream: #fdf6ec; /* cream canvas — a light Candle Light tint */
-  --color-surface: #fae8d2; /* soft candle surface tint for raised elements */
-  --color-ink: #10060b; /* Nuln Oil — headings & primary text */
-  --color-muted: #6e5a60; /* warm plum-gray — secondary text & labels */
-  --color-flame: #f1563b; /* primary accent — CTAs, active states */
-  --color-firewatch: #f28960; /* secondary accent — tags, hover lifts */
-  --color-candle: #f5ac66; /* warm accent — badges, glows */
+  --color-cream: #aedceb;
+  --color-surface: #fffbef;
+  --color-ink: #2b160e;
+  --color-muted: #7a5b48;
+  --color-flame: #f6de7e;
+  --color-firewatch: #e8c15e;
+  --color-candle: #6fb8d1;
 }
 
 html,
@@ -23,21 +23,6 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   overscroll-behavior: none;
-}
-
-/* One warm gradient mesh behind the whole site (the Skills treatment, made
-   global): candle → firewatch → flame corner glows over the cream canvas,
-   fixed to the viewport so every section shares it seamlessly — the pan never
-   crosses a background seam. */
-body {
-  background-image:
-    radial-gradient(55% 70% at 12% 18%, rgba(245, 172, 102, 0.55) 0%, rgba(245, 172, 102, 0) 65%),
-    radial-gradient(45% 60% at 88% 12%, rgba(242, 137, 96, 0.4) 0%, rgba(242, 137, 96, 0) 65%),
-    radial-gradient(55% 75% at 82% 88%, rgba(245, 172, 102, 0.4) 0%, rgba(245, 172, 102, 0) 65%),
-    radial-gradient(45% 60% at 18% 92%, rgba(241, 86, 59, 0.28) 0%, rgba(241, 86, 59, 0) 60%);
-  background-attachment: fixed;
-  background-size: 100vw 100vh;
-  background-repeat: no-repeat;
 }
 
 /* Fine film grain over the whole canvas — keeps the big cream fields from
@@ -55,7 +40,7 @@ body::after {
 
 ::selection {
   background: var(--color-flame);
-  color: var(--color-cream);
+  color: var(--color-ink);
 }
 
 .font-display {

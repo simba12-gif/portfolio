@@ -103,7 +103,7 @@ export default function ProjectCursor({ containerRef }) {
           click lands on the image's own <a> underneath (pointer-events: none
           on this whole element). */}
       <span
-        className="select-none text-[10px] font-semibold uppercase tracking-[0.18em] text-cream transition-opacity duration-200"
+        className="select-none text-[10px] font-semibold uppercase tracking-[0.18em] text-ink transition-opacity duration-200"
         style={{ opacity: variant === 'view' && visible ? 1 : 0 }}
       >
         View

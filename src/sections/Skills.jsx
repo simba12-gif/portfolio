@@ -7,11 +7,29 @@ import SkillWave from '../components/SkillWave.jsx'
 import { TECH_ICONS } from '../icons.js'
 import { SKILL_GROUPS } from '../data.js'
 
-const PLUM = '#10060b'
-// Badge fills cycle warm-to-cool so neighbours never repeat; each fill
-// carries its own contrast colour for the mark on top of it.
-const FILLS = ['#f1563b', '#f28960', '#f5ac66', '#10060b']
-const MARKS = ['#fdf6ec', '#10060b', '#10060b', '#fdf6ec']
+const INK = 'var(--color-ink)'
+// Badge fills cycle through ink, flame, firewatch, and candle in a varied mix
+// with contrasting marks (surface mark on dark ink, ink mark on light fills).
+const FILLS = [
+  'var(--color-ink)',
+  'var(--color-flame)',
+  'var(--color-candle)',
+  'var(--color-ink)',
+  'var(--color-firewatch)',
+  'var(--color-candle)',
+  'var(--color-flame)',
+  'var(--color-firewatch)',
+]
+const MARKS = [
+  'var(--color-surface)',
+  'var(--color-ink)',
+  'var(--color-ink)',
+  'var(--color-surface)',
+  'var(--color-ink)',
+  'var(--color-ink)',
+  'var(--color-ink)',
+  'var(--color-ink)',
+]
 
 // Two drifting chains: the build stack up top, the toolbox and AI work below.
 const ALL_SKILLS = SKILL_GROUPS.flatMap((group) => group.skills).map((skill, i) => ({
@@ -71,7 +89,7 @@ export default function Skills({ active, onNavigate }) {
   return (
     <div
       className="relative -my-10 flex flex-col justify-center overflow-hidden py-10 lg:my-0 lg:h-full lg:flex-row lg:items-center lg:py-0"
-      style={{ color: PLUM }}
+      style={{ color: INK }}
     >
       <StickerFilter />
       <motion.div

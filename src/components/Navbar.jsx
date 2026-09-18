@@ -33,7 +33,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
             </span>
             <button
               onClick={() => go(sections.length - 1)}
-              className="hidden rounded-full bg-flame px-5 py-2 text-sm font-semibold text-cream transition-colors duration-300 hover:bg-firewatch sm:block"
+              className="hidden rounded-full bg-flame px-5 py-2 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-firewatch sm:block"
             >
               Let&apos;s Connect
             </button>
@@ -122,7 +122,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
               onClick={() => go(sections.length - 1)}
               aria-label="Let's connect"
               title="Let's Connect"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-flame text-lg text-cream transition-colors duration-300 hover:bg-firewatch"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-flame text-lg text-ink transition-colors duration-300 hover:bg-firewatch"
             >
               <FiMail aria-hidden="true" />
             </button>
