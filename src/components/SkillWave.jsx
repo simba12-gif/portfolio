@@ -89,8 +89,8 @@ function Card({ ref, item, width, height, hoverable }) {
   return (
     <div
       ref={ref}
-      className="group absolute left-0 top-0 flex flex-col items-center justify-center gap-1 overflow-hidden will-change-transform"
-      style={{ width, height, borderRadius: width * 0.26, backgroundColor: bg, color: ink }}
+      className="skill-card group absolute left-0 top-0 flex flex-col items-center justify-center gap-1 overflow-hidden will-change-transform"
+      style={{ width, height, borderRadius: 3, backgroundColor: bg, color: ink }}
     >
       {Icon ? (
         <Icon
@@ -112,11 +112,11 @@ function Card({ ref, item, width, height, hoverable }) {
           <span className="relative flex items-center justify-center" style={{ height: height * 0.62 }}>
             <span
               aria-hidden="true"
-              className="absolute inset-0 rounded-full bg-[#f5ac66]"
+              className="skill-name-sticker absolute inset-0 rounded-full"
               style={{ filter: 'url(#sticker-rough)' }}
             />
             <span
-              className="relative px-2 text-center font-extrabold leading-[1.1] tracking-tight text-[#10060b]"
+              className="skill-name relative px-2 text-center font-semibold leading-[1.1] tracking-tight"
               style={{ fontSize: Math.max(10, width * 0.088) }}
             >
               {skill}

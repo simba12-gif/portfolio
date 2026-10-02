@@ -8,28 +8,9 @@ import { TECH_ICONS } from '../icons.js'
 import { SKILL_GROUPS } from '../data.js'
 
 const INK = 'var(--color-ink)'
-// Badge fills cycle through ink, flame, firewatch, and candle in a varied mix
-// with contrasting marks (surface mark on dark ink, ink mark on light fills).
-const FILLS = [
-  'var(--color-ink)',
-  'var(--color-flame)',
-  'var(--color-candle)',
-  'var(--color-ink)',
-  'var(--color-firewatch)',
-  'var(--color-candle)',
-  'var(--color-flame)',
-  'var(--color-firewatch)',
-]
-const MARKS = [
-  'var(--color-surface)',
-  'var(--color-ink)',
-  'var(--color-ink)',
-  'var(--color-surface)',
-  'var(--color-ink)',
-  'var(--color-ink)',
-  'var(--color-ink)',
-  'var(--color-ink)',
-]
+// Muted paper cards with one occasional terracotta accent.
+const FILLS = ['var(--skill-paper)', 'var(--skill-ink)', 'var(--skill-paper)', 'var(--skill-accent)']
+const MARKS = ['var(--skill-ink)', 'var(--skill-paper)', 'var(--skill-ink)', 'var(--skill-ink)']
 
 // Two drifting chains: the build stack up top, the toolbox and AI work below.
 const ALL_SKILLS = SKILL_GROUPS.flatMap((group) => group.skills).map((skill, i) => ({
@@ -76,7 +57,7 @@ function StickerFilter() {
 
 function CategoryTag({ name }) {
   return (
-    <span className="whitespace-nowrap rounded-full border border-ink/15 bg-surface/70 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-ink/60">
+    <span className="category-tag whitespace-nowrap rounded-full border border-ink/15 bg-surface/70 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-ink/60">
       {name}
     </span>
   )
@@ -93,7 +74,7 @@ export default function Skills({ active, onNavigate }) {
     >
       <StickerFilter />
       <motion.div
-        className="mx-auto w-full max-w-none px-5 md:px-10 lg:pl-24"
+        className="skills-content mx-auto w-full max-w-none px-5 md:px-10 lg:pl-24"
         initial={false}
         animate={reduced ? undefined : active ? 'show' : 'hidden'}
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}

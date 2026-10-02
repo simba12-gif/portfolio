@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 // already-animated wrapper (or statically for reduced motion).
 export default function Chapter({ num, title, variants }) {
   return (
-    <motion.p variants={variants} className="font-serif-x mb-4 text-sm italic text-ink/60">
+    <motion.p variants={variants} className="chapter-label">
       <span aria-hidden="true" className="not-italic text-flame">
         ✦
       </span>{' '}

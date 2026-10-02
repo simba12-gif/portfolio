@@ -5,7 +5,7 @@ export default function ProgressDots({ sections, activeIndex, onNavigate }) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40">
-      <div className="pointer-events-auto mx-auto mb-4 hidden w-fit items-center gap-3 rounded-full border border-ink/10 bg-surface/80 px-5 py-2.5 backdrop-blur lg:flex">
+      <div className="progress-nav pointer-events-auto mx-auto mb-4 hidden w-fit items-center gap-3 rounded-full border border-ink/10 bg-surface/80 px-5 py-2.5 backdrop-blur lg:flex">
         {sections.map((s, i) => (
           <button
             key={s.id}

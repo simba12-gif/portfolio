@@ -94,6 +94,23 @@ function HorizontalLayout() {
     window.scrollTo({ top: OFFSETS[clamp(i)] * window.innerHeight, behavior: 'smooth' })
   }, [])
 
+  // Sideways trackpad gestures use the same native scroll / spring pipeline.
+  // Leave vertical wheels, diagonal gestures, and pinch-to-zoom to the browser.
+  useEffect(() => {
+    const viewport = viewportRef.current
+    const onWheel = (event) => {
+      if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return
+      event.preventDefault()
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerWidth : 1
+      window.scrollBy({
+        top: event.deltaX * unit * (window.innerHeight / window.innerWidth),
+        behavior: 'instant',
+      })
+    }
+    viewport?.addEventListener('wheel', onWheel, { passive: false })
+    return () => viewport?.removeEventListener('wheel', onWheel)
+  }, [])
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.target instanceof Element && e.target.closest('input, textarea, select')) return
@@ -149,7 +166,7 @@ function HorizontalLayout() {
                   id={s.id}
                   aria-label={s.name}
                   onFocusCapture={() => onSectionFocus(i)}
-                  className="relative h-full shrink-0"
+                  className="chapter-section relative h-full shrink-0"
                   style={{ width: `${SPANS[i] * 100}vw` }}
                 >
                   {/* Always active: the strip is one continuous canvas — content
@@ -201,7 +218,7 @@ function VerticalLayout() {
     <>
       <Navbar sections={SECTIONS} activeIndex={index} onNavigate={navigate} />
 
-      <main className="pt-16">
+      <main className="vertical-layout pt-16">
         {SECTIONS.map((s, i) => {
           const Section = COMPONENTS[i]
           return (
@@ -210,7 +227,7 @@ function VerticalLayout() {
               id={s.id}
               ref={(el) => (sectionRefs.current[i] = el)}
               aria-label={s.name}
-              className="flex min-h-screen flex-col py-10 *:grow"
+              className="chapter-section flex min-h-screen flex-col py-10 *:grow"
             >
               <Section active={i === index} onNavigate={navigate} />
             </section>

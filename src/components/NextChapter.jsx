@@ -8,7 +8,7 @@ export default function NextChapter({ index, label, onNavigate }) {
     <Magnetic className="absolute bottom-8 right-8 z-10 hidden lg:block">
       <button
         onClick={() => onNavigate(index)}
-        className="flex items-center gap-2 rounded-full border border-ink/15 bg-surface px-4 py-2 text-xs font-semibold text-ink transition-colors duration-300 hover:border-flame"
+        className="next-chapter flex items-center gap-2 rounded-full border border-ink/15 bg-surface px-4 py-2 text-xs font-semibold text-ink transition-colors duration-300 hover:border-flame"
       >
         Next — {label}
         <FiArrowRight aria-hidden="true" />

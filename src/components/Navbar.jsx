@@ -14,7 +14,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
   return (
     <>
       {/* Mobile / tablet: top bar with hamburger menu */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-cream/70 backdrop-blur-md lg:hidden">
+      <header className="mobile-nav fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-cream/70 backdrop-blur-md lg:hidden">
         <nav className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 md:px-10">
           <button
             onClick={() => go(0)}
@@ -33,7 +33,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
             </span>
             <button
               onClick={() => go(sections.length - 1)}
-              className="hidden rounded-full bg-flame px-5 py-2 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-firewatch sm:block"
+              className="connect-button hidden rounded-full bg-flame px-5 py-2 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-firewatch sm:block"
             >
               Let&apos;s Connect
             </button>
@@ -78,7 +78,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
       </header>
 
       {/* Desktop: vertical side rail */}
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-20 flex-col items-center justify-between border-r border-ink/10 bg-cream/60 py-6 backdrop-blur-md lg:flex">
+      <aside className="nav-rail fixed inset-y-0 left-0 z-50 hidden w-20 flex-col items-center justify-between border-r border-ink/10 bg-cream/60 py-6 backdrop-blur-md lg:flex">
         <button
           onClick={() => go(0)}
           className="font-serif-x text-2xl font-bold tracking-tight text-ink"
@@ -122,7 +122,7 @@ export default function Navbar({ sections, activeIndex, onNavigate }) {
               onClick={() => go(sections.length - 1)}
               aria-label="Let's connect"
               title="Let's Connect"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-flame text-lg text-ink transition-colors duration-300 hover:bg-firewatch"
+              className="connect-button flex h-11 w-11 items-center justify-center rounded-full bg-flame text-lg text-ink transition-colors duration-300 hover:bg-firewatch"
             >
               <FiMail aria-hidden="true" />
             </button>

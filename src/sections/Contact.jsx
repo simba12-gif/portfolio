@@ -14,7 +14,7 @@ export default function Contact({ active, onNavigate }) {
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
       <motion.div
-        className="relative mx-auto flex w-full max-w-5xl grow flex-col justify-center px-5 md:px-10 lg:pl-24"
+        className="contact-content section-grid relative mx-auto flex w-full max-w-5xl grow flex-col justify-center px-5 md:px-10 lg:pl-24"
         initial={false}
         animate={active ? 'show' : 'hidden'}
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}
@@ -41,7 +41,7 @@ export default function Contact({ active, onNavigate }) {
           href="mailto:kakiharshita@gmail.com"
           className="group mt-9 inline-flex w-fit items-baseline gap-3"
         >
-          <span className="font-serif-x relative text-2xl font-semibold tracking-tight md:text-4xl">
+          <span className="contact-email relative text-2xl font-semibold tracking-tight md:text-4xl">
             kakiharshita@gmail.com
             <span
               aria-hidden="true"
@@ -60,7 +60,7 @@ export default function Contact({ active, onNavigate }) {
         >
           Elsewhere on the internet
         </motion.p>
-        <motion.ul className="mt-2 max-w-2xl border-t border-ink/20" variants={item}>
+        <motion.ul className="contact-links mt-2 max-w-2xl border-t border-ink/20" variants={item}>
           {CONTACTS.map((c) => (
             <li key={c.label}>
               <a
@@ -86,7 +86,7 @@ export default function Contact({ active, onNavigate }) {
       </motion.div>
 
       <motion.footer
-        className="relative flex items-center justify-between border-t border-ink/10 bg-cream/50 px-5 py-5 text-xs text-muted backdrop-blur-sm md:px-10 lg:pb-8 lg:pl-24"
+        className="contact-footer relative flex items-center justify-between border-t border-ink/10 bg-cream/50 px-5 py-5 text-xs text-muted backdrop-blur-sm md:px-10 lg:pb-8 lg:pl-24"
         variants={item}
         initial={false}
         animate={active ? 'show' : 'hidden'}

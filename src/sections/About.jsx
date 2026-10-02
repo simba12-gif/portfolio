@@ -36,7 +36,7 @@ export default function About({ active, onNavigate }) {
   return (
     <div className="relative flex h-full flex-col justify-center overflow-hidden">
       <motion.div
-        className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 md:px-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16 lg:pl-24"
+        className="section-grid relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 md:px-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16 lg:pl-24"
         initial={false}
         animate={active ? 'show' : 'hidden'}
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}
@@ -83,7 +83,7 @@ export default function About({ active, onNavigate }) {
               ({String(NUMBERS.length).padStart(2, '0')})
             </span>
           </p>
-          <div className="grid grid-cols-2">
+          <div className="stats-grid grid grid-cols-2">
             {NUMBERS.map((n, i) => (
               <Tilt
                 key={n.label}
@@ -92,7 +92,7 @@ export default function About({ active, onNavigate }) {
                   i < NUMBERS.length - 2 ? 'border-b' : ''
                 }`}
               >
-                <span className="font-serif-x block text-5xl font-semibold leading-none tracking-tight xl:text-6xl">
+                <span className="stat-value block text-5xl font-semibold leading-none tracking-tight xl:text-6xl">
                   <CountUp value={n.value} />
                 </span>
                 <span className="mt-3 block text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/80">

@@ -22,7 +22,7 @@ function GhostNumeral({ progress, i }) {
     <motion.span
       aria-hidden="true"
       style={{ x, y: '-50%' }}
-      className="font-serif-x pointer-events-none absolute left-[1vw] top-1/2 select-none text-[22rem] font-bold leading-none text-ink/[0.045] transition-colors duration-700 group-hover:text-ink/[0.07] xl:text-[26rem]"
+      className="project-numeral pointer-events-none absolute left-[1vw] top-1/2 select-none text-[22rem] font-bold leading-none text-ink/[0.045] transition-colors duration-700 group-hover:text-ink/[0.07] xl:text-[26rem]"
     >
       {String(i + 1).padStart(2, '0')}
     </motion.span>
@@ -74,7 +74,7 @@ function ProjectBody({ project, index, desktop }) {
         {project.kicker}
       </span>
       <h3
-        className={`font-serif-x mt-4 font-semibold leading-[0.98] tracking-[-0.02em] ${
+        className={`project-title mt-4 font-semibold leading-[0.98] tracking-[-0.02em] ${
           desktop
             ? 'text-6xl transition-transform duration-500 ease-out group-hover:translate-x-2 xl:text-7xl'
             : 'text-4xl'
@@ -97,7 +97,7 @@ function ProjectBody({ project, index, desktop }) {
       </div>
       {/* Stack stays out of the way — surfaced only on hover, never as badges. */}
       <p
-        className={`mt-6 font-mono text-[11px] tracking-wide text-muted/70 ${
+        className={`project-stack mt-6 font-mono text-[11px] tracking-wide text-muted/70 ${
           desktop
             ? 'opacity-0 transition-opacity duration-500 group-hover:opacity-100'
             : 'opacity-70'
@@ -132,7 +132,7 @@ export default function Work({ active, onNavigate }) {
 
         {/* Title screen — "My / Projects (04)". */}
         <motion.div
-          className="flex h-full w-screen shrink-0 flex-col justify-center px-[5vw] xl:px-[6vw]"
+          className="work-title flex h-full w-screen shrink-0 flex-col justify-center px-[5vw] xl:px-[6vw]"
           initial={false}
           animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.5 }}
@@ -145,7 +145,7 @@ export default function Work({ active, onNavigate }) {
           </div>
 
           {/* Editorial index — a quiet table of contents for the panels ahead. */}
-          <ul className="mt-10 max-w-2xl divide-y divide-ink/10 border-y border-ink/20">
+          <ul className="project-index mt-10 max-w-2xl divide-y divide-ink/10 border-y border-ink/20">
             {PROJECTS.map((p, i) => (
               <li key={p.name}>
                 {/* Jump straight to this build's panel on the strip */}
@@ -194,7 +194,7 @@ export default function Work({ active, onNavigate }) {
           <motion.article
             key={p.name}
             data-cursor="project"
-            className="group relative flex h-full w-screen shrink-0 items-center px-[5vw] xl:px-[6vw]"
+            className="project-panel group relative flex h-full w-screen shrink-0 items-center px-[5vw] xl:px-[6vw]"
             initial={false}
             animate={active ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5 }}
@@ -219,10 +219,10 @@ export default function Work({ active, onNavigate }) {
                 rel="noreferrer noopener"
                 aria-label={`View ${p.name} — ${p.live ? 'live site' : 'GitHub repository'}`}
                 data-cursor="view"
-                className="group/card absolute inset-y-0 right-0 w-1/2 outline-offset-[-3px] focus-visible:outline-2 focus-visible:outline-flame"
+                className="project-preview group/card absolute inset-y-0 right-0 w-1/2 outline-offset-[-3px] focus-visible:outline-2 focus-visible:outline-flame"
               >
                 <Tilt max={5} className="h-full w-full">
-                  <div className="h-full w-full overflow-hidden [mask-image:linear-gradient(to_left,black_40%,transparent_85%)]">
+                  <div className="project-preview-mask h-full w-full overflow-hidden">
                     <img
                       src={p.image}
                       alt=""
@@ -237,7 +237,7 @@ export default function Work({ active, onNavigate }) {
             {/* pointer-events-none on the grid, re-enabled on its content: the
                 grid's transparent box spans the whole panel and would otherwise
                 sit on top of the image link and swallow its hovers/clicks. */}
-            <div className="pointer-events-none relative grid w-full grid-cols-[minmax(0,26%)_minmax(0,1fr)] items-start gap-x-10 xl:gap-x-16">
+            <div className="project-copy pointer-events-none relative grid w-full grid-cols-[minmax(0,26%)_minmax(0,1fr)] items-start gap-x-10 xl:gap-x-16">
               <span className="pointer-events-auto mt-1 font-mono text-sm text-muted/60">
                 {String(i + 1).padStart(2, '0')}
               </span>
