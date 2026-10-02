@@ -1,16 +1,66 @@
-# React + Vite
+# Harshita — Personal Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern, responsive personal portfolio website built with React, Vite, and Tailwind CSS. The portfolio showcases my projects, technical skills, experience, and creative work as a Computer Science & AI/ML undergraduate.
 
-Currently, two official plugins are available:
+🌐 **Live Website:** https://portfolio-pink-phi-97.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🎨 Modern and responsive UI
+- 📱 Mobile-friendly design
+- ⚡ Fast performance with Vite
+- 🎬 Smooth animations and interactions using Framer Motion
+- 🎯 Project showcase
+- 🛠️ Technical skills section
+- 👩‍💻 About section
+- 📬 Contact section
+- 🔗 Social and professional profile links
+- 🖼️ Custom illustrations and portfolio imagery
+- 🌐 Deployed on Vercel
+- 🔄 GitHub-integrated continuous deployment
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 🛠️ Tech Stack
+
+### Frontend
+- React
+- Vite
+- Tailwind CSS
+- JavaScript
+
+### Libraries
+- Framer Motion — animations and transitions
+- React Icons — icons and UI elements
+
+### Development Tools
+- Git
+- GitHub
+- VS Code
+- Vercel
+
+---
+
+## 📂 Project Structure
+
+```text
+portfolio/
+│
+├── public/
+│   └── static assets
+│
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── ...
+│
+├── index.html
+├── package.json
+├── package-lock.json
+├── vite.config.js
+├── .oxlintrc.json
+└── README.md
