@@ -171,7 +171,7 @@ function HorizontalLayout() {
                 >
                   {/* Always active: the strip is one continuous canvas — content
                       never fades in/out as the pan crosses section seams. */}
-                  <Section active onNavigate={navigate} />
+                  <Section active onNavigate={navigate} workProgress={i === 3 ? smooth : undefined} />
                 </section>
               )
             })}

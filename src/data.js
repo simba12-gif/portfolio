@@ -59,7 +59,7 @@ export const PROJECTS = [
     blurb:
       'Interactive database visualization tool that turns SQL schemas into draggable, animated ER diagrams — with relationship mapping, PostgreSQL introspection, AI-powered schema queries, and 3D visualization.',
     tech: ['Next.js', 'TypeScript', 'Express', 'PostgreSQL', 'Three.js', 'Gemini AI'],
-    live: null,
+    live: 'https://dblens-client.vercel.app/',
     github: 'https://github.com/simba12-gif/dblens',
     image: '/projects/dblens.webp',
   },
