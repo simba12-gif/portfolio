@@ -113,11 +113,11 @@ function Card({ ref, item, width, height, hoverable }) {
             <span
               aria-hidden="true"
               className="skill-name-sticker absolute inset-0 rounded-full"
-              style={{ filter: 'url(#sticker-rough)' }}
+              style={{ filter: 'url(#sticker-rough)', backgroundColor: 'var(--skill-accent)' }}
             />
             <span
               className="skill-name relative px-2 text-center font-semibold leading-[1.1] tracking-tight"
-              style={{ fontSize: Math.max(10, width * 0.088) }}
+              style={{ fontSize: Math.max(10, width * 0.088), color: 'var(--skill-ink)' }}
             >
               {skill}
             </span>

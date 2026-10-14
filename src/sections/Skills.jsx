@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import Chapter from '../components/Chapter.jsx'
-import NextChapter from '../components/NextChapter.jsx'
 import RevealText from '../components/RevealText.jsx'
 import SkillWave from '../components/SkillWave.jsx'
 import { TECH_ICONS } from '../icons.js'
 import { SKILL_GROUPS } from '../data.js'
 
 const INK = 'var(--color-ink)'
-// Muted paper cards with one occasional terracotta accent.
+// Existing paper, ink, and lichen colors.
 const FILLS = ['var(--skill-paper)', 'var(--skill-ink)', 'var(--skill-paper)', 'var(--skill-accent)']
 const MARKS = ['var(--skill-ink)', 'var(--skill-paper)', 'var(--skill-ink)', 'var(--skill-ink)']
 
-// Two drifting chains: the build stack up top, the toolbox and AI work below.
+// Preserve the original skill order and palette in two readable groups.
 const ALL_SKILLS = SKILL_GROUPS.flatMap((group) => group.skills).map((skill, i) => ({
   skill,
   Icon: TECH_ICONS[skill],
@@ -55,15 +53,7 @@ function StickerFilter() {
   )
 }
 
-function CategoryTag({ name }) {
-  return (
-    <span className="category-tag whitespace-nowrap rounded-full border border-ink/15 bg-surface/70 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-ink/60">
-      {name}
-    </span>
-  )
-}
-
-export default function Skills({ active, onNavigate }) {
+export default function Skills({ active }) {
   const reduced = useReducedMotion()
   const canHover = useCanHover()
 
@@ -74,13 +64,13 @@ export default function Skills({ active, onNavigate }) {
     >
       <StickerFilter />
       <motion.div
-        className="skills-content mx-auto w-full max-w-none px-5 md:px-10 lg:pl-24"
+        className="skills-content mx-auto w-full max-w-none px-5 md:px-10 lg:px-[6vw]"
         initial={false}
         animate={reduced ? undefined : active ? 'show' : 'hidden'}
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}
       >
         <motion.div className="relative mx-auto w-fit max-w-6xl" variants={reduced ? undefined : rise}>
-          <Chapter num="03" title="The Toolkit" />
+
           <RevealText
             className="display-serif"
             segments={[
@@ -106,7 +96,7 @@ export default function Skills({ active, onNavigate }) {
               ))}
             </ul>
           ) : (
-            <div className="-mt-4 space-y-1 lg:-mt-8 lg:space-y-2">
+            <div className="space-y-3">
               {TRACKS.map((items, i) => (
                 <SkillWave
                   key={i}
@@ -121,18 +111,11 @@ export default function Skills({ active, onNavigate }) {
           )}
         </motion.div>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          {SKILL_GROUPS.map((g) => (
-            <CategoryTag key={g.title} name={g.title} />
-          ))}
+        <div className="mt-6 text-center text-xs leading-relaxed text-muted">
+          {SKILL_GROUPS.map((g) => g.title).join(' / ')}
         </div>
-
-        {canHover && !reduced && (
-          <p className="mt-4 text-center text-[11px] italic text-ink/50">✦ hover a card for its name</p>
-        )}
       </motion.div>
 
-      <NextChapter index={3} label="The Builds" onNavigate={onNavigate} />
     </div>
   )
 }

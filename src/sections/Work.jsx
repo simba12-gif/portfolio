@@ -1,8 +1,6 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { FiArrowUpRight, FiGithub } from 'react-icons/fi'
-import Chapter from '../components/Chapter.jsx'
-import NextChapter from '../components/NextChapter.jsx'
 import { PROJECTS } from '../data.js'
 import './Work.css'
 
@@ -11,14 +9,14 @@ const COUNT = PROJECTS.length
 const START = 3
 const LAST = 4 + COUNT
 
-function ProjectCard({ project, index, onFocus }) {
+function ProjectCard({ project, onFocus }) {
   return (
     <article className="process-project" onFocusCapture={onFocus}>
       <a className="process-project-link" href={project.live} target="_blank"
         rel="noopener noreferrer" aria-label={`${project.name} — open live website in a new tab`}>
         <img src={project.image} alt="" width="1440" height="900" decoding="async" />
         <span className="process-shade" aria-hidden="true" />
-        <span className="process-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+
         <div className="process-copy">
           <p className="process-kicker">{project.kicker}</p>
           <h3>{project.name}</h3>
@@ -36,17 +34,12 @@ function ProjectCard({ project, index, onFocus }) {
   )
 }
 
-function Heading({ onSelect }) {
+function Heading() {
   return <header className="process-heading">
     <div>
-      <Chapter num="04" title="Selected Work" />
-      <h2 className="display-lg"><span className="font-serif-x italic">My </span>Projects <span className="process-count">({String(COUNT).padStart(2, '0')})</span></h2>
+
+      <h2 className="display-lg"><span className="font-serif-x italic">My </span>Projects</h2>
     </div>
-    {onSelect && <nav aria-label="Project index" className="process-index">
-      {PROJECTS.map((project, index) => <button key={project.name} onClick={() => onSelect(index)}>
-        <span>{String(index + 1).padStart(2, '0')}</span> {project.name} <FiArrowUpRight aria-hidden="true" />
-      </button>)}
-    </nav>}
   </header>
 }
 
@@ -66,11 +59,11 @@ function RisingCard({ project, index, progress, onFocus }) {
   const y = useTransform(progress, interval, ['100vh', '0vh'], { ease: easeReveal })
   const opacity = useTransform(progress, interval, [0, 1], { ease: easeReveal })
   return <motion.div className="process-column" style={{ y, opacity }}>
-    <ProjectCard project={project} index={index} onFocus={onFocus} />
+    <ProjectCard project={project} onFocus={onFocus} />
   </motion.div>
 }
 
-function DesktopWork({ progress, onNavigate }) {
+function DesktopWork({ progress }) {
   // Cancel only the Work portion of the global pan, preserving every chapter's
   // original position, navigation offset, and scroll distance.
   const x = useTransform(progress, [START / LAST, (START + COUNT) / LAST], ['0vw', `${COUNT * 100}vw`])
@@ -80,13 +73,13 @@ function DesktopWork({ progress, onNavigate }) {
     if (revealProgress.get() < revealEnd(index) - 0.01) select(index, 'instant')
   }
   return <motion.div className="process-desktop" style={{ x }}>
-    <Heading onSelect={select} />
+    <Heading />
     <div className="process-row" style={{ '--project-count': COUNT }}>
       {PROJECTS.map((project, index) => <RisingCard key={project.name} project={project} index={index}
         progress={revealProgress} onFocus={() => revealOnFocus(index)} />)}
     </div>
     <MoreProjects />
-    <NextChapter index={4} label="The Next Chapter" onNavigate={onNavigate} />
+
   </motion.div>
 }
 
@@ -118,22 +111,17 @@ function MobileWork() {
             progress={revealProgress} onFocus={() => select(index, 'instant')} />)}
         </motion.div>
       </div>
-      <nav className="process-mobile-index" aria-label="Project index">
-        {PROJECTS.map((project, index) => <button key={project.name} onClick={() => select(index)} aria-label={`Show ${project.name}`}>
-          {String(index + 1).padStart(2, '0')}
-        </button>)}
-      </nav>
       <MoreProjects />
     </div>
   </div>
 }
 
-export default function Work({ workProgress, onNavigate }) {
+export default function Work({ workProgress }) {
   const reduced = useReducedMotion()
   if (reduced) return <div className="process-static">
     <Heading />
-    <div className="process-static-list">{PROJECTS.map((project, index) => <ProjectCard key={project.name} project={project} index={index} />)}</div>
+    <div className="process-static-list">{PROJECTS.map((project) => <ProjectCard key={project.name} project={project} />)}</div>
     <MoreProjects />
   </div>
-  return workProgress ? <DesktopWork progress={workProgress} onNavigate={onNavigate} /> : <MobileWork />
+  return workProgress ? <DesktopWork progress={workProgress} /> : <MobileWork />
 }

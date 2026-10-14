@@ -61,21 +61,6 @@ body::after {
   letter-spacing: -0.065em;
   color: var(--color-flame);
 }
-.chapter-label {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 1.6rem;
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.chapter-label > span { font-size: 17px; }
-.chapter-label::after { content: ''; height: 1px; width: 42px; background: var(--detail); }
 /* Paper tones connect the existing chapters without altering strip geometry. */
 .chapter-section { border-left: 1px solid var(--rule); }
 #home { background: var(--color-cream); }
@@ -114,25 +99,7 @@ body::after {
 .hero-status > span > span:first-child { animation: none; }
 .stats-grid { border-bottom: 1px solid var(--rule); }
 .stat-value { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.065em; }
-/* Preserve the side rail, mobile menu, and chapter controls. */
-.nav-rail { background: var(--color-cream); backdrop-filter: none; }
-.nav-rail > button, .mobile-nav nav > button { font-family: var(--font-display); font-weight: 600; }
-.nav-rail li button { font-size: 11px; letter-spacing: 0.08em; }
-.nav-rail li button[aria-current='true'] { color: var(--color-flame); }
-.connect-button { background: var(--color-ink); color: var(--color-surface); border-radius: 2px; }
-.connect-button:hover, .connect-button:active { background: var(--color-firewatch); }
-.mobile-nav { background: var(--color-cream); }
-.next-chapter { border-radius: 2px; padding: 0.8rem 1rem; font-size: 10px; letter-spacing: 0.04em; }
-.next-chapter svg { transition: transform 180ms var(--ease-out); }
-.next-chapter:hover svg { transform: translateX(3px); }
-.progress-nav { border-radius: 2px; gap: 0.35rem; padding: 0.25rem 0.6rem; }
-.progress-nav button { width: 28px; height: 28px; }
-.progress-nav button span { height: 2px; width: 14px; border-radius: 0; }
-.progress-nav button[aria-current='true'] span { width: 24px; }
 .skill-card { border: 1px solid var(--rule); }
-.skill-name-sticker { background: var(--skill-accent); }
-.skill-name { color: var(--skill-ink); }
-.category-tag { border-radius: 2px; background: transparent; color: var(--color-muted); padding: 0.55rem 0.75rem; }
 /* Existing full-screen project panels: framed images and readable foreground. */
 .project-title { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.055em; }
 .project-panel { isolation: isolate; }
@@ -160,7 +127,7 @@ body::after {
 .project-cursor-label { color: var(--color-surface); }
 .contact-footer { background: transparent; backdrop-filter: none; }
 @media (min-width: 1024px) {
-  .section-grid { max-width: 1280px; padding-left: 9rem; padding-right: 4rem; }
+  .section-grid { max-width: 1280px; padding-inline: clamp(32px, 6vw, 96px); }
   .work-title { padding-left: max(9rem, 10vw); }
   .hero-content { gap: clamp(2rem, 4vw, 5rem); }
   .project-panel { padding-left: max(7rem, 8vw); }
@@ -172,7 +139,6 @@ body::after {
 @media (min-width: 1024px) and (max-height: 760px) {
   .display-xl { font-size: clamp(3.5rem, 6.5vw, 6rem); }
   .display-lg, .display-serif { font-size: clamp(2.8rem, 4vw, 4rem); }
-  .chapter-label { margin-bottom: 1rem; }
   .hero-content { padding-block: 1.5rem; }
   .hero-content .mt-8 { margin-top: 1.25rem; }
   .hero-content .mt-9 { margin-top: 1.5rem; }
@@ -185,8 +151,8 @@ body::after {
   .skills-content > .mt-6 { margin-top: 0.75rem; }
 }
 @media (max-width: 1023px) {
-  .chapter-section { border-left: 0; border-top: 1px solid var(--rule); scroll-margin-top: 64px; }
-  .vertical-layout .chapter-section { min-height: calc(100svh - 64px); padding-block: 3rem; }
+  .chapter-section { border-left: 0; border-top: 1px solid var(--rule); scroll-margin-top: 0; }
+  .vertical-layout .chapter-section { min-height: 100svh; padding-block: 3rem; }
   .vertical-layout #home { padding-top: 0; }
   .display-xl { font-size: clamp(3.5rem, 10vw, 6rem); }
   .display-lg, .display-serif { font-size: clamp(2.6rem, 7.5vw, 4rem); }

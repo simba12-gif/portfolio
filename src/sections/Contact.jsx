@@ -1,8 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FiArrowUp, FiArrowUpRight } from 'react-icons/fi'
-import Chapter from '../components/Chapter.jsx'
-import Magnetic from '../components/Magnetic.jsx'
 import RevealText from '../components/RevealText.jsx'
 import { CONTACTS } from '../data.js'
 import './Contact.css'
@@ -67,7 +65,7 @@ export default function Contact({ active, onNavigate }) {
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}
       >
         <motion.div className="relative w-fit" variants={item}>
-          <Chapter num="05" title="The Next Chapter" />
+
           <RevealText
             className="display-lg"
             segments={[
@@ -88,20 +86,18 @@ export default function Contact({ active, onNavigate }) {
       </motion.div>
 
       <motion.footer
-        className="contact-footer relative flex items-center justify-between border-t border-ink/10 bg-cream/50 px-5 py-5 text-xs text-muted backdrop-blur-sm md:px-10 lg:pb-8 lg:pl-24"
+        className="contact-footer relative flex items-center justify-between border-t border-ink/10 bg-cream/50 px-5 py-5 text-xs text-muted backdrop-blur-sm md:px-10 lg:pb-8 lg:px-[6vw]"
         variants={item}
         initial={false}
         animate={active ? 'show' : 'hidden'}
       >
         <span>© 2026 Kaki Harshita. Built with React &amp; a lot of curiosity.</span>
-        <Magnetic>
           <button
             onClick={() => onNavigate(0)}
-            className="flex items-center gap-1.5 rounded-full border border-ink/15 px-4 py-2 font-semibold text-ink transition-colors hover:border-flame"
+            className="flex items-center gap-1.5 px-1 py-2 font-semibold text-ink transition-colors hover:border-flame"
           >
             Back to start <FiArrowUp aria-hidden="true" />
           </button>
-        </Magnetic>
       </motion.footer>
     </div>
   )

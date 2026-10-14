@@ -15,11 +15,11 @@ const wordVariants = {
   }),
 }
 
-export default function RevealText({ as = 'h2', className = '', segments, delay = 0 }) {
+export default function RevealText({ as = 'h2', className = '', segments, delay = 0, immediate = false }) {
   const reduced = useReducedMotion()
   const Tag = as
 
-  if (reduced) {
+  if (reduced || immediate) {
     return (
       <Tag className={className}>
         {segments.map((s, i) => (

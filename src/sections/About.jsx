@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, motion, useInView, useReducedMotion } from 'framer-motion'
-import Chapter from '../components/Chapter.jsx'
-import NextChapter from '../components/NextChapter.jsx'
 import RevealText from '../components/RevealText.jsx'
 import Tilt from '../components/Tilt.jsx'
 import { NUMBERS } from '../data.js'
@@ -15,24 +13,25 @@ const item = {
 
 // Rolls a stat from zero when it scrolls into view, preserving any
 // leading-zero padding ('04' counts 00 → 04). Reduced motion shows it plain.
-function CountUp({ value }) {
+function CountUp({ value, settled = false }) {
   const ref = useRef(null)
   const reduced = useReducedMotion()
   const inView = useInView(ref, { once: true, amount: 0.5 })
   const [text, setText] = useState(() => (reduced ? value : '0'.padStart(value.length, '0')))
   useEffect(() => {
-    if (reduced || !inView) return
+    if (settled || reduced || !inView) return
     const controls = animate(0, parseInt(value, 10), {
       duration: 1.6,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setText(String(Math.round(v)).padStart(value.length, '0')),
     })
     return () => controls.stop()
-  }, [inView, reduced, value])
-  return <span ref={ref}>{text}</span>
+  }, [inView, reduced, value, settled])
+  return <span ref={ref}>{settled ? value : text}</span>
 }
 
-export default function About({ active, onNavigate }) {
+export default function About({ active, integrated = false }) {
+  const revealItem = integrated ? undefined : item
   return (
     <div className="relative flex h-full flex-col justify-center overflow-hidden">
       <motion.div
@@ -42,8 +41,9 @@ export default function About({ active, onNavigate }) {
         variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }}
       >
         <div>
-          <Chapter num="02" title="The Story" variants={item} />
+
           <RevealText
+            immediate={integrated}
             className="display-lg"
             segments={[
               { text: 'The mind behind ' },
@@ -53,7 +53,7 @@ export default function About({ active, onNavigate }) {
 
           <motion.p
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted"
-            variants={item}
+            variants={revealItem}
           >
             I&apos;m a Computer Science – AI &amp; ML undergraduate passionate about building
             things, understanding how they work, and turning ideas into meaningful
@@ -62,7 +62,7 @@ export default function About({ active, onNavigate }) {
 
           <motion.p
             className="mt-4 max-w-2xl text-base leading-relaxed text-muted"
-            variants={item}
+            variants={revealItem}
           >
             Beyond tech, I&apos;m the Creative Lead at OWASP — a cybersecurity club at my
             college — where I shape the club&apos;s design direction and visual identity. I
@@ -70,18 +70,15 @@ export default function About({ active, onNavigate }) {
             are functional <em className="text-ink">and</em> engaging.
           </motion.p>
 
-          <motion.p className="font-serif-x mt-7 text-sm italic text-muted" variants={item}>
+          <motion.p className="font-serif-x mt-7 text-sm italic text-muted" variants={revealItem}>
             Currently exploring — {EXPLORING.join(' · ')}
           </motion.p>
         </div>
 
         {/* "Some numbers I'm proud of" — the Firma stats block, with real figures. */}
-        <motion.div variants={item}>
+        <motion.div variants={revealItem}>
           <p className="flex items-baseline justify-between border-b border-ink/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
             Some numbers I&apos;m proud of
-            <span className="font-serif-x text-sm normal-case italic tracking-normal">
-              ({String(NUMBERS.length).padStart(2, '0')})
-            </span>
           </p>
           <div className="stats-grid grid grid-cols-2">
             {NUMBERS.map((n, i) => (
@@ -93,7 +90,7 @@ export default function About({ active, onNavigate }) {
                 }`}
               >
                 <span className="stat-value block text-5xl font-semibold leading-none tracking-tight xl:text-6xl">
-                  <CountUp value={n.value} />
+                  <CountUp value={n.value} settled={integrated} />
                 </span>
                 <span className="mt-3 block text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/80">
                   {n.label}
@@ -105,7 +102,6 @@ export default function About({ active, onNavigate }) {
         </motion.div>
       </motion.div>
 
-      <NextChapter index={2} label="The Toolkit" onNavigate={onNavigate} />
     </div>
   )
 }

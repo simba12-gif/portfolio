@@ -1,77 +1,79 @@
-import { useId, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
-import { FiArrowRight, FiArrowUpRight } from 'react-icons/fi'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import portrait from '../assets/kaki-portrait-real.jpg'
 import './Hero.css'
 
-function PortraitCard() {
-  const [flipped, setFlipped] = useState(false)
-  const descriptionId = useId()
+const ease = (t) => t * t * (3 - 2 * t)
+
+function PortraitCard({ progress, stage, anchor }) {
+  const [box, setBox] = useState(null)
+  useEffect(() => {
+    let mounted = true
+    const measure = () => {
+      const root = stage.current
+      const slot = anchor.current
+      if (!mounted || !root || !slot) return
+      // Local offsets are independent of the page's animated horizontal transform.
+      const bounds = slot.getBoundingClientRect()
+      const origin = root.getBoundingClientRect()
+      setBox({ x: bounds.left - origin.left + bounds.width / 2,
+        y: bounds.top - origin.top + bounds.height / 2,
+        w: slot.offsetWidth, h: slot.offsetHeight, width: root.clientWidth, height: root.clientHeight })
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(stage.current)
+    observer.observe(anchor.current)
+    document.fonts.ready.then(measure)
+    return () => { mounted = false; observer.disconnect() }
+  }, [stage, anchor])
+  const expansion = useTransform(progress, [0.34, 0.72], [0, 1], { ease })
+  const rotateY = useTransform(progress, [0.02, 0.32], [0, 180], { ease })
+  const width = useTransform(expansion, (p) => box ? box.w + (box.width - box.w) * p : 0)
+  const height = useTransform(expansion, (p) => box ? box.h + (box.height - box.h) * p : 0)
+  const left = useTransform(expansion, (p) => box ? box.x + (box.width / 2 - box.x) * p : 0)
+  const top = useTransform(expansion, (p) => box ? box.y + (box.height / 2 - box.y) * p : 0)
+  const borderRadius = useTransform(expansion, [0, 1], ['48% 48% 45% 45% / 32% 32% 30% 30%', '0% 0% 0% 0% / 0% 0% 0% 0%'])
+  return <motion.div className="hero-cinema-photo" style={{ width, height, left, top, borderRadius, visibility: box ? 'visible' : 'hidden' }}>
+    <motion.div className="hero-cinema-faces" style={{ rotateY, borderRadius }}>
+      <div className="hero-cinema-face"><img src={portrait} alt="Kaki Harshita" fetchPriority="high" /></div>
+      <div className="hero-cinema-face hero-cinema-reverse" aria-hidden="true"><span className="hero-monogram">KH</span></div>
+    </motion.div>
+  </motion.div>
+}
+
+function HeroComposition({ progress, desktop = false, reduced = false }) {
+  const stage = useRef(null)
+  const anchor = useRef(null)
+  // The card opens from its centre, exposing the real About section beneath it.
+  const opening = useTransform(progress, [0.72, 1], [0, 50], { ease })
+  const clipPath = useTransform(opening, (p) => `polygon(0% 0%, ${50 - p}% 0%, ${50 - p}% 100%, ${50 + p}% 100%, ${50 + p}% 0%, 100% 0%, 100% 100%, 0% 100%)`)
+  const nameOpacity = useTransform(progress, [0.12, 0.5], [1, 0])
+  const visibility = useTransform(progress, (p) => p >= 0.999 ? 'hidden' : 'visible')
 
   return (
-    <button
-      type="button"
-      className="hero-photo"
-      aria-label="Flip portrait to learn about Kaki Harshita"
-      aria-pressed={flipped}
-      aria-describedby={flipped ? descriptionId : undefined}
-      onPointerEnter={(event) => {
-        if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover)').matches) setFlipped(true)
-      }}
-      onPointerLeave={(event) => {
-        if (event.pointerType === 'mouse') setFlipped(false)
-      }}
-      onClick={() => setFlipped((value) => !value)}
-      onBlur={() => setFlipped(false)}
-      onKeyDown={(event) => {
-        if (event.key === 'Escape') setFlipped(false)
-      }}
-    >
-      <span className="hero-photo-inner">
-        <span className="hero-photo-face hero-photo-front" aria-hidden={flipped}>
-          <img src={portrait} alt="Kaki Harshita" loading="eager" fetchPriority="high" />
-        </span>
-        <span className="hero-photo-face hero-photo-back" aria-hidden={!flipped}>
-          <span id={descriptionId} className="hero-card-copy">
-            <span className="hero-card-title">Aspiring Full Stack &amp; Generative AI developer.</span>
-            <span className="hero-card-description">Computer Science (AI &amp; ML) undergraduate. Creative Lead at OWASP. Blending technology, creativity, and design to turn ideas into meaningful experiences.</span>
-          </span>
-        </span>
-      </span>
-    </button>
+    <motion.div ref={stage} className="editorial-hero hero-cinema-stage" style={reduced ? undefined : { x: desktop ? '100vw' : 0, clipPath, visibility }}>
+
+      <div className="hero-masthead">
+        <motion.h1 className="hero-name" aria-label="Kaki Harshita" style={reduced ? undefined : { opacity: nameOpacity }}><span>Kaki</span><span>Harshita</span></motion.h1>
+        <div ref={anchor} className="hero-photo hero-photo-anchor">{reduced && <img src={portrait} alt="Kaki Harshita" fetchPriority="high" />}</div>
+      </div>
+      {!reduced && <PortraitCard progress={progress} stage={stage} anchor={anchor} />}
+      <p className="sr-only">Aspiring Full Stack &amp; Generative AI developer. Computer Science (AI &amp; ML) undergraduate. Creative Lead at OWASP. Blending technology, creativity, and design to turn ideas into meaningful experiences.</p>
+
+    </motion.div>
   )
 }
 
-export default function Hero({ onNavigate }) {
+
+
+export default function Hero({ heroProgress, heroDesktop = false }) {
   const reduced = useReducedMotion()
-
-  return (
-    <div className="editorial-hero">
-      <div className="hero-edition">
-        <span>01 / The Spark</span>
-        <span className="hero-availability"><i aria-hidden="true" />Open to opportunities</span>
-      </div>
-
-      <motion.div
-        className="hero-masthead"
-        initial={reduced ? false : { opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.65, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <h1 className="hero-name" aria-label="Kaki Harshita"><span>Kaki</span><span>Harshita</span></h1>
-        <PortraitCard />
-      </motion.div>
-
-      <div className="hero-bottom">
-        <div className="hero-actions">
-          <button type="button" onClick={() => onNavigate(3)}>View my work <FiArrowUpRight aria-hidden="true" /></button>
-          <button type="button" onClick={() => onNavigate(4)}>Get in touch <FiArrowUpRight aria-hidden="true" /></button>
-        </div>
-        <button type="button" className="hero-scroll" onClick={() => onNavigate(1)} aria-label="Explore The Story, next section">
-          <span>Scroll to explore</span><span className="hero-scroll-circle"><FiArrowRight aria-hidden="true" /></span>
-        </button>
-      </div>
-    </div>
-  )
+  const track = useRef(null)
+  const { scrollYProgress } = useScroll({ target: track, offset: ['start start', 'end end'] })
+  const smooth = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.0001 })
+  return <div ref={track} className={!heroProgress && !reduced ? 'hero-scroll-track' : 'hero-static-track'}>
+    <HeroComposition progress={heroProgress || smooth} desktop={heroDesktop} reduced={reduced} />
+  </div>
 }
 

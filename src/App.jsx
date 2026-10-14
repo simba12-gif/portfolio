@@ -7,10 +7,6 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import Intro from './components/Intro.jsx'
-import JourneyPath from './components/JourneyPath.jsx'
-import Navbar from './components/Navbar.jsx'
-import ProgressDots from './components/ProgressDots.jsx'
 import Hero from './sections/Hero.jsx'
 import About from './sections/About.jsx'
 import Skills from './sections/Skills.jsx'
@@ -61,7 +57,7 @@ function useHorizontalMode() {
 function HorizontalLayout() {
   const wrapperRef = useRef(null)
   const viewportRef = useRef(null)
-  // Nearest section, for wayfinding only (navbar counter, dots).
+  // Track the current section for keyboard and focus navigation.
   const [index, setIndex] = useState(0)
   const indexRef = useRef(0)
   useEffect(() => {
@@ -74,13 +70,13 @@ function HorizontalLayout() {
   })
   // Light smoothing (GSAP scrub ≈ 0.5 feel); useTransform clamps any overshoot.
   const smooth = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.0001 })
-  const x = useTransform(smooth, [0, 1], ['0vw', `-${LAST * 100}vw`])
-  // The storyline thread pans slower than the sections for parallax depth.
-  const PATH_PARALLAX = 0.75
-  const pathX = useTransform(smooth, [0, 1], ['0vw', `-${LAST * 100 * PATH_PARALLAX}vw`])
-
+  // Hold the opening composition while the portrait flips and expands.
+  // Rejoin the original strip mapping at About; later chapters keep their offsets.
+  const x = useTransform(smooth, [0, 1 / LAST, 1], ['-100vw', '-100vw', `-${LAST * 100}vw`])
+  const heroProgress = useTransform(smooth, [0, 1 / LAST], [0, 1])
   useMotionValueEvent(scrollYProgress, 'change', (p) => {
-    const pos = p * LAST
+    const scrollPosition = p * LAST
+    const pos = scrollPosition < 1 ? (scrollPosition >= 0.86 ? 1 : 0) : scrollPosition
     // Wayfinding (navbar, dots): the section under the viewport's centre.
     const nearest = sectionAt(Math.min(pos + 0.5, LAST))
     if (nearest !== indexRef.current) setIndex(nearest)
@@ -143,17 +139,9 @@ function HorizontalLayout() {
 
   return (
     <>
-      <Navbar sections={SECTIONS} activeIndex={index} onNavigate={navigate} />
 
       <div ref={wrapperRef} style={{ height: `${TOTAL * 100}vh` }}>
         <div ref={viewportRef} className="sticky top-0 h-screen overflow-hidden">
-          <motion.div
-            aria-hidden="true"
-            className="absolute inset-y-0 left-0"
-            style={{ x: pathX, width: `${100 + LAST * 100 * PATH_PARALLAX}vw` }}
-          >
-            <JourneyPath />
-          </motion.div>
           <motion.main
             className="relative flex h-full"
             style={{ x, width: `${TOTAL * 100}vw` }}
@@ -171,7 +159,7 @@ function HorizontalLayout() {
                 >
                   {/* Always active: the strip is one continuous canvas — content
                       never fades in/out as the pan crosses section seams. */}
-                  <Section active onNavigate={navigate} workProgress={i === 3 ? smooth : undefined} />
+                  <Section active onNavigate={navigate} workProgress={i === 3 ? smooth : undefined} heroProgress={i === 0 ? heroProgress : undefined} heroDesktop={i === 0} integrated={i === 1} />
                 </section>
               )
             })}
@@ -179,30 +167,57 @@ function HorizontalLayout() {
         </div>
       </div>
 
-      <ProgressDots sections={SECTIONS} activeIndex={index} onNavigate={navigate} />
     </>
   )
 }
 
-// Below 1024px (or reduced motion): plain vertical document flow.
+// Both chapters occupy the same grid cell. The real About section stays pinned
+// behind the opening card, then resumes document flow without a duplicate or swap.
+function MobileHeroBridge({ registerHome, registerAbout, onNavigate, onChapter }) {
+  const runway = useRef(null)
+  const { scrollYProgress } = useScroll({ target: runway, offset: ['start start', 'end start'] })
+  const progress = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.0001 })
+  useMotionValueEvent(scrollYProgress, 'change', (p) => onChapter(p >= 0.86 ? 1 : 0))
+  return <div className="hero-about-bridge">
+    <div ref={runway} className="hero-bridge-runway" aria-hidden="true" />
+    <section id="home" aria-label={SECTIONS[0].name} ref={registerHome} className="chapter-section hero-bridge-front">
+      <Hero onNavigate={onNavigate} heroProgress={progress} />
+    </section>
+    <div className="hero-bridge-about-track">
+      <section id="about" aria-label={SECTIONS[1].name} ref={registerAbout} className="chapter-section flex flex-col hero-bridge-about">
+        <About active integrated onNavigate={onNavigate} />
+      </section>
+    </div>
+  </div>
+}
+
+// Reduced motion retains plain vertical document flow.
 function VerticalLayout() {
+  const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
   const sectionRefs = useRef([])
+  const registerHome = useCallback((el) => { sectionRefs.current[0] = el }, [])
+  const registerAbout = useCallback((el) => { sectionRefs.current[1] = el }, [])
 
   const navigate = useCallback((i) => {
     const next = clamp(i)
-    sectionRefs.current[next]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const runway = document.querySelector('.hero-bridge-runway')
+    if (runway && next < 2) {
+      window.scrollTo({ top: next === 0 ? 0 : runway.getBoundingClientRect().top + window.scrollY + runway.offsetHeight, behavior: 'smooth' })
+    } else {
+      sectionRefs.current[next]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
     setIndex(next)
   }, [])
 
-  // Keep the navbar counter / progress bar in sync while scrolling.
+  // Activate content reveals as sections enter the viewport.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const i = sectionRefs.current.indexOf(entry.target)
-            if (i !== -1) setIndex(i)
+            if (i !== -1 && (i > 1 || !document.querySelector('.hero-about-bridge'))) setIndex(i)
           }
         }
       },
@@ -216,10 +231,11 @@ function VerticalLayout() {
 
   return (
     <>
-      <Navbar sections={SECTIONS} activeIndex={index} onNavigate={navigate} />
 
-      <main className="vertical-layout pt-16">
+      <main className="vertical-layout">
+        {!reduced && <MobileHeroBridge registerHome={registerHome} registerAbout={registerAbout} onNavigate={navigate} onChapter={setIndex} />}
         {SECTIONS.map((s, i) => {
+          if (!reduced && i < 2) return null
           const Section = COMPONENTS[i]
           return (
             <section
@@ -235,7 +251,6 @@ function VerticalLayout() {
         })}
       </main>
 
-      <ProgressDots sections={SECTIONS} activeIndex={index} onNavigate={navigate} />
     </>
   )
 }
@@ -249,7 +264,6 @@ export default function App() {
   }, [horizontal])
   return (
     <>
-      <Intro />
       {horizontal ? <HorizontalLayout key="h" /> : <VerticalLayout key="v" />}
     </>
   )
