@@ -9,7 +9,7 @@
 .process-index button span { font-size: 10px; color: var(--color-muted); }
 .process-index button svg { margin-left: auto; }
 .process-index button:hover { color: var(--color-flame); }
-.process-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.process-row { display: grid; grid-template-columns: repeat(var(--project-count), minmax(0, 1fr)); gap: 20px; }
 .process-column { min-width: 0; }
 .process-project { position: relative; min-width: 0; height: clamp(450px, 58vh, 550px); color: var(--color-surface); isolation: isolate; }
 .process-project-link { position: relative; display: flex; flex-direction: column; height: 100%; padding: 26px; overflow: hidden; border-radius: 20px; border: 1px solid var(--color-muted); background: var(--color-ink); isolation: isolate; }
@@ -53,14 +53,15 @@
   .process-source { right: 16px; bottom: 16px; }
   .process-more { margin-top: 16px; }
 }
-.process-mobile { height: calc(100svh + (var(--project-count) - 1) * 65svh); position: relative; }
+.process-mobile { height: calc(100svh + var(--project-count) * 65svh); position: relative; }
 .process-mobile-stage { position: sticky; top: 64px; height: calc(100svh - 64px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 .process-mobile .process-heading { width: min(100%, 430px); margin-bottom: 24px; }
 .process-mobile .process-heading .display-lg { font-size: clamp(32px, 7vw, 48px); }
 .process-mobile .chapter-label { margin-bottom: 12px; }
 .process-window { width: min(100%, 430px); overflow: clip; padding: 4px; margin: -4px; }
 .process-mobile-track { display: flex; gap: 20px; }
-.process-mobile-track > .process-project { flex: 0 0 100%; height: clamp(440px, 57svh, 540px); }
+.process-mobile-track > .process-column { flex: 0 0 100%; }
+.process-mobile-track .process-project { height: clamp(440px, 57svh, 540px); }
 .process-mobile .process-number { font-size: 72px; }
 .process-mobile .process-copy h3 { font-size: 30px; }
 .process-mobile-index { display: flex; gap: 12px; margin-top: 16px; }
@@ -87,7 +88,8 @@
   .process-mobile-stage { position: static; height: auto; }
   .process-window { overflow: visible; }
   .process-mobile-track { transform: none !important; flex-direction: column; }
-  .process-mobile-track > .process-project { flex: auto; height: auto; min-height: 460px; }
+  .process-mobile-track > .process-column { flex: auto; transform: none !important; opacity: 1 !important; }
+  .process-mobile-track .process-project { height: auto; min-height: 460px; }
   .process-mobile-track .process-project-link { min-height: 460px; }
   .process-mobile-index { display: none; }
 }
