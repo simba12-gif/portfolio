@@ -158,9 +158,6 @@ body::after {
 .project-index button:hover, .project-index button:focus-visible { color: var(--color-flame); padding-left: 0.4rem; }
 .project-index .font-serif-x { font-family: var(--font-display); font-weight: 500; }
 .project-cursor-label { color: var(--color-surface); }
-.contact-email { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.045em; }
-.contact-links a { transition: padding 200ms, border-color 200ms; }
-.contact-links a:hover { padding-inline: 0.5rem; }
 .contact-footer { background: transparent; backdrop-filter: none; }
 @media (min-width: 1024px) {
   .section-grid { max-width: 1280px; padding-left: 9rem; padding-right: 4rem; }
@@ -197,9 +194,7 @@ body::after {
   .hero-portrait-wrap { max-width: 300px; }
   .hero-marquee { margin-top: 1rem; padding-block: 1rem; }
   .contact-content { padding-block: 1rem 3rem; }
-  .contact-email { font-size: clamp(1.1rem, 4.7vw, 2.5rem); }
   .contact-links a { gap: 0.75rem; }
-  .contact-links a > span:last-child { font-size: 12px; overflow-wrap: anywhere; min-width: 0; }
   .contact-footer { gap: 1.5rem; align-items: flex-start; }
   .contact-footer > span { max-width: 60%; line-height: 1.7; }
   .contact-footer button { white-space: nowrap; padding: 0.5rem; border-radius: 2px; }

@@ -1,0 +1,48 @@
+/* Reference FAQ sweep: enter from the left, clear to the right. */
+.contact-row {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.contact-row-value { min-width: 0; overflow-wrap: anywhere; }
+.contact-row-arrow { flex-shrink: 0; }
+.contact-row-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-ink);
+  pointer-events: none;
+  transform: translateX(-100%);
+  transition: transform 380ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+.contact-row-fill-copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: inherit;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+  transition: transform 380ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+.contact-row-fill, .contact-row-fill-copy { padding: inherit; }
+/* Only the copy receives padding: the clipping layer must span the whole row. */
+.contact-row-fill { padding: 0; }
+.contact-row-fill-copy { padding-block: 0.875rem; gap: 1.5rem; }
+.contact-row-fill-copy :is(.contact-row-label, .contact-row-value, .contact-row-arrow) {
+  color: var(--color-surface);
+}
+.contact-row[data-fill='active'] :is(.contact-row-fill, .contact-row-fill-copy) { transform: translateX(0); }
+.contact-row[data-fill='leaving'] .contact-row-fill { transform: translateX(100%); }
+.contact-row[data-fill='leaving'] .contact-row-fill-copy { transform: translateX(-100%); }
+.contact-row[data-fill='idle'] :is(.contact-row-fill, .contact-row-fill-copy) { transition: none; }
+@media (min-width: 1024px) and (max-height: 760px) {
+  .contact-row-fill-copy { padding-block: 0.7rem; }
+}
+@media (max-width: 1023px) {
+  .contact-row-value { font-size: 12px; }
+  .contact-row-fill-copy { gap: 0.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-row-fill, .contact-row-fill-copy { transition: none; }
+}

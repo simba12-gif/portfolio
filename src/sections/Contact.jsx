@@ -1,13 +1,60 @@
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FiArrowUp, FiArrowUpRight } from 'react-icons/fi'
 import Chapter from '../components/Chapter.jsx'
 import Magnetic from '../components/Magnetic.jsx'
 import RevealText from '../components/RevealText.jsx'
 import { CONTACTS } from '../data.js'
+import './Contact.css'
 
 const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   hidden: { opacity: 0, y: 30 },
+}
+
+function ContactRow({ contact }) {
+  const [phase, setPhase] = useState('idle')
+  const pointerInside = useRef(false)
+  const keyboardFocus = useRef(false)
+  const leave = () => {
+    if (!pointerInside.current && !keyboardFocus.current) setPhase('leaving')
+  }
+  const content = <>
+    <span className="contact-row-label text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
+      {contact.label}
+    </span>
+    <span className="contact-row-value flex items-center gap-2 text-sm text-ink">
+      {contact.value}<FiArrowUpRight aria-hidden="true" className="contact-row-arrow text-muted" />
+    </span>
+  </>
+  return <li>
+    <a href={contact.href} target={contact.external ? '_blank' : undefined}
+      rel={contact.external ? 'noreferrer noopener' : undefined}
+      className="contact-row flex items-baseline justify-between gap-6 border-b border-ink/10 py-3.5"
+      data-fill={phase}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== 'mouse') return
+        pointerInside.current = true
+        setPhase('active')
+      }}
+      onPointerLeave={() => { pointerInside.current = false; leave() }}
+      onFocus={(event) => {
+        keyboardFocus.current = event.currentTarget.matches(':focus-visible')
+        if (keyboardFocus.current) setPhase('active')
+      }}
+      onBlur={() => { keyboardFocus.current = false; leave() }}
+    >
+      {content}
+      {/* The clipped copy inverts only the text already covered by the sweep.
+          Counter-translation keeps both copies perfectly registered. */}
+      <span className="contact-row-fill" aria-hidden="true"
+        onTransitionEnd={(event) => {
+          if (event.target === event.currentTarget && event.propertyName === 'transform' && phase === 'leaving') setPhase('idle')
+        }}>
+        <span className="contact-row-fill-copy">{content}</span>
+      </span>
+    </a>
+  </li>
 }
 
 export default function Contact({ active, onNavigate }) {
@@ -35,53 +82,8 @@ export default function Contact({ active, onNavigate }) {
           conversation about tech and design.
         </motion.p>
 
-        {/* Primary CTA: the address itself, set large — no pill, no fill. */}
-        <motion.a
-          variants={item}
-          href="mailto:kakiharshita@gmail.com"
-          className="group mt-9 inline-flex w-fit items-baseline gap-3"
-        >
-          <span className="contact-email relative text-2xl font-semibold tracking-tight md:text-4xl">
-            kakiharshita@gmail.com
-            <span
-              aria-hidden="true"
-              className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-100 bg-ink/25 transition-all duration-300 ease-out group-hover:scale-x-100 group-hover:bg-flame"
-            />
-          </span>
-          <FiArrowUpRight
-            aria-hidden="true"
-            className="text-xl text-muted transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-flame md:text-2xl"
-          />
-        </motion.a>
-
-        <motion.p
-          variants={item}
-          className="mt-12 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted"
-        >
-          Elsewhere on the internet
-        </motion.p>
-        <motion.ul className="contact-links mt-2 max-w-2xl border-t border-ink/20" variants={item}>
-          {CONTACTS.map((c) => (
-            <li key={c.label}>
-              <a
-                href={c.href}
-                target={c.external ? '_blank' : undefined}
-                rel={c.external ? 'noreferrer noopener' : undefined}
-                className="group flex items-baseline justify-between gap-6 border-b border-ink/10 py-3.5 transition-colors duration-300 hover:border-flame/60"
-              >
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted transition-colors group-hover:text-ink">
-                  {c.label}
-                </span>
-                <span className="flex items-center gap-2 text-sm text-ink">
-                  {c.value}
-                  <FiArrowUpRight
-                    aria-hidden="true"
-                    className="text-muted transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  />
-                </span>
-              </a>
-            </li>
-          ))}
+        <motion.ul className="contact-links mt-9 max-w-2xl" variants={item}>
+          {CONTACTS.map((contact) => <ContactRow key={contact.label} contact={contact} />)}
         </motion.ul>
       </motion.div>
 
