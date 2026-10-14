@@ -8,23 +8,23 @@
 .process-index button { display: flex; align-items: center; gap: 8px; font-size: 12px; text-align: left; }
 .process-index button span { font-size: 10px; color: var(--color-muted); }
 .process-index button svg { margin-left: auto; }
-.process-index button:hover { color: var(--color-flame); }
+.process-index button:hover { color: var(--color-firewatch); }
 .process-row { display: grid; grid-template-columns: repeat(var(--project-count), minmax(0, 1fr)); gap: 20px; }
 .process-column { min-width: 0; }
-.process-project { position: relative; min-width: 0; height: clamp(450px, 58vh, 550px); color: var(--color-surface); isolation: isolate; }
-.process-project-link { position: relative; display: flex; flex-direction: column; height: 100%; padding: 26px; overflow: hidden; border-radius: 20px; border: 1px solid var(--color-muted); background: var(--color-ink); isolation: isolate; }
+.process-project { position: relative; min-width: 0; height: clamp(450px, 58vh, 550px); color: var(--project-foreground); isolation: isolate; }
+.process-project-link { position: relative; display: flex; flex-direction: column; height: 100%; padding: 26px; overflow: hidden; border-radius: 20px; border: 1px solid var(--rule); background: var(--project-background); isolation: isolate; }
 .process-project-link > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: -2; }
-.process-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #24292320 0%, #24292370 25%, #242923ed 55%, #242923fa 100%); transition: opacity 240ms ease-out; }
-.process-number { align-self: end; font: 500 clamp(56px, 6vw, 96px)/1 var(--font-display); letter-spacing: -0.065em; text-shadow: 0 2px 20px #24292366; }
+.process-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #27303820 0%, #27303870 25%, #273038ed 55%, #273038fa 100%); transition: opacity 240ms ease-out; }
+.process-number { align-self: end; font: 500 clamp(56px, 6vw, 96px)/1 var(--font-display); letter-spacing: -0.065em; text-shadow: 0 2px 20px #27303866; }
 .process-copy { margin-top: auto; padding-top: 22px; }
 .process-kicker { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; line-height: 1.5; }
 .process-copy h3 { font-family: var(--font-display); font-size: clamp(22px, 2vw, 30px); font-weight: 500; letter-spacing: -0.055em; line-height: 1.1; margin-top: 8px; }
 .process-description { margin-top: 14px; font-size: 13px; line-height: 1.5; }
-.process-tech { margin-top: 16px; padding-top: 12px; border-top: 1px solid #faf8f333; font-family: monospace; font-size: 10px; line-height: 1.5; }
+.process-tech { margin-top: 16px; padding-top: 12px; border-top: 1px solid #cbd2ce55; font-family: monospace; font-size: 10px; line-height: 1.5; }
 .process-live { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-top: 20px; width: fit-content; }
 .process-source { position: absolute; bottom: 26px; right: 26px; z-index: 2; display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 5px 0; margin-bottom: -5px; }
 .process-project-link:focus-visible { outline: 3px solid var(--color-flame); outline-offset: 3px; }
-.process-source:focus-visible { outline-color: var(--color-surface); }
+.process-source:focus-visible { outline-color: var(--project-foreground); }
 .process-more { display: flex; align-items: center; gap: 10px; width: fit-content; margin-top: 28px; font-size: 12px; color: var(--color-muted); }
 .process-more:hover, .process-source:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (hover: hover) {

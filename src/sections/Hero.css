@@ -135,3 +135,5 @@
 @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
   .editorial-hero { padding-inline: max(100px, 8vw); }
 }
+
+.editorial-hero .hero-actions button:hover { color: var(--color-firewatch); }
