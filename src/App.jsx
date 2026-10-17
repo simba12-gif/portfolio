@@ -40,10 +40,10 @@ const sectionAt = (coord) => {
 function useHorizontalMode() {
   const reduced = useReducedMotion()
   const [wide, setWide] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px) and (min-height: 700px)').matches,
   )
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px)')
+    const mq = window.matchMedia('(min-width: 1024px) and (min-height: 700px)')
     const onChange = (e) => setWide(e.matches)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
@@ -201,14 +201,15 @@ function VerticalLayout() {
 
   const navigate = useCallback((i) => {
     const next = clamp(i)
+    const behavior = reduced ? 'instant' : 'smooth'
     const runway = document.querySelector('.hero-bridge-runway')
     if (runway && next < 2) {
-      window.scrollTo({ top: next === 0 ? 0 : runway.getBoundingClientRect().top + window.scrollY + runway.offsetHeight, behavior: 'smooth' })
+      window.scrollTo({ top: next === 0 ? 0 : runway.getBoundingClientRect().top + window.scrollY + runway.offsetHeight, behavior })
     } else {
-      sectionRefs.current[next]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      sectionRefs.current[next]?.scrollIntoView({ behavior, block: 'start' })
     }
     setIndex(next)
-  }, [])
+  }, [reduced])
 
   // Activate content reveals as sections enter the viewport.
   useEffect(() => {

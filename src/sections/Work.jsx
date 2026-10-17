@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { FiArrowUpRight, FiGithub } from 'react-icons/fi'
 import { PROJECTS } from '../data.js'
@@ -118,9 +118,27 @@ function MobileWork() {
 
 export default function Work({ workProgress }) {
   const reduced = useReducedMotion()
+  const [short, setShort] = useState(() => window.matchMedia('(max-height: 700px)').matches)
+  useEffect(() => {
+    const query = window.matchMedia('(max-height: 700px)')
+    const sync = () => setShort(query.matches)
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
   if (reduced) return <div className="process-static">
     <Heading />
     <div className="process-static-list">{PROJECTS.map((project) => <ProjectCard key={project.name} project={project} />)}</div>
+    <MoreProjects />
+  </div>
+  if (!workProgress && short) return <div className="process-static process-flow">
+    <Heading />
+    <div className="process-static-list">{PROJECTS.map((project) => (
+      <motion.div key={project.name} initial={{ y: 64, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }} viewport={{ amount: 0.15 }}
+        transition={{ duration: 0.65, ease: easeReveal }}>
+        <ProjectCard project={project} />
+      </motion.div>
+    ))}</div>
     <MoreProjects />
   </div>
   return workProgress ? <DesktopWork progress={workProgress} /> : <MobileWork />

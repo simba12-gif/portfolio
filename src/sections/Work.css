@@ -1,5 +1,5 @@
 /* Scoped to Selected Work: the reference's portrait columns and 20px gutters. */
-.process-desktop { width: 100vw; height: 100%; padding: clamp(32px, 7vh, 72px) 6vw 48px; display: flex; flex-direction: column; justify-content: center; }
+.process-desktop { width: 100vw; height: 100%; padding: var(--section-space) max(32px, calc((100vw - 1600px) / 2)) 32px; display: flex; flex-direction: column; justify-content: center; }
 .process-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
 .process-heading h2 > span:first-child { color: var(--color-muted); margin-right: 0.16em; }
 .process-row { display: grid; grid-template-columns: repeat(var(--project-count), minmax(0, 1fr)); gap: 20px; }
@@ -14,10 +14,10 @@
 .process-description { margin-top: 14px; font-size: 13px; line-height: 1.5; }
 .process-tech { margin-top: 16px; padding-top: 12px; border-top: 1px solid #cbd2ce55; font-family: monospace; font-size: 10px; line-height: 1.5; }
 .process-live { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-top: 20px; width: fit-content; }
-.process-source { position: absolute; bottom: 26px; right: 26px; z-index: 2; display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 5px 0; margin-bottom: -5px; }
+.process-source { position: absolute; bottom: 26px; right: 26px; z-index: 2; display: flex; align-items: center; gap: 5px; font-size: 11px; min-height: 44px; padding: 12px 0; margin-bottom: -12px; }
 .process-project-link:focus-visible { outline: 3px solid var(--color-flame); outline-offset: 3px; }
 .process-source:focus-visible { outline-color: var(--project-foreground); }
-.process-more { display: flex; align-items: center; gap: 10px; width: fit-content; margin-top: 28px; font-size: 12px; color: var(--color-muted); }
+.process-more { display: flex; align-items: center; gap: 10px; width: fit-content; min-height: 44px; margin-top: 20px; font-size: 12px; color: var(--color-muted); }
 .process-more:hover, .process-source:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (hover: hover) {
   .process-project-link:hover { border-color: var(--color-flame); }
@@ -49,7 +49,7 @@
 .process-window { width: min(100%, 430px); overflow: clip; padding: 4px; margin: -4px; }
 .process-mobile-track { display: flex; gap: 20px; }
 .process-mobile-track > .process-column { flex: 0 0 100%; }
-.process-mobile-track .process-project { height: clamp(440px, 57svh, 540px); }
+.process-mobile-track .process-project { height: min(540px, calc(100svh - 190px)); min-height: 440px; }
 .process-mobile .process-copy h3 { font-size: 30px; }
 .process-mobile .process-more { margin-top: 16px; font-size: 11px; }
 @media (max-width: 360px) {
@@ -65,14 +65,8 @@
 .process-static .process-project { height: auto; min-height: 500px; }
 .process-static .process-project-link { min-height: 500px; }
 @media (max-width: 600px) { .process-static-list { grid-template-columns: 1fr; } }
-/* Short/landscape viewports use document flow to keep every line reachable. */
-@media (max-width: 1023px) and (max-height: 700px) {
-  .process-mobile { height: auto; }
-  .process-mobile-stage { position: static; height: auto; }
-  .process-window { overflow: visible; }
-  .process-mobile-track { transform: none !important; flex-direction: column; }
-  .process-mobile-track > .process-column { flex: auto; transform: none !important; opacity: 1 !important; }
-  .process-mobile-track .process-project { height: auto; min-height: 460px; }
-  .process-mobile-track .process-project-link { min-height: 460px; }
-}
+/* Short screens retain the card rise in document flow, without a clipped pin. */
+.process-flow .process-project, .process-flow .process-project-link { min-height: 460px; }
+.process-static .process-project-link { padding-bottom: 72px; }
+.process-static .process-source { bottom: 26px; }
 @media (prefers-reduced-motion: reduce) { .process-shade { transition: none; } }

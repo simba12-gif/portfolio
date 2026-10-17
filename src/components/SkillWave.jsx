@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAnimationFrame } from 'framer-motion'
 
 // A drifting "chain" of cards riding a sine path — the agenius rocket-section
@@ -9,15 +9,17 @@ import { useAnimationFrame } from 'framer-motion'
 // come back to the same value at p = 1 for the wrap to be invisible.
 const WAVES = 2
 
-function metricsFor(width, count) {
-  const cardW = Math.max(100, Math.min(158, width / 8.2))
+function metricsFor(width, count, viewportHeight) {
+  const cardW = Math.max(100, Math.min(158, width / 8.2, viewportHeight * 0.19))
   const cardH = Math.round(cardW * 0.66)
   const gap = cardW * 0.1
   // Long enough that the wrap always happens off-screen, and never so short
   // that the cards pile up on each other.
   const loop = Math.max(count * (cardW + gap), width + cardW * 2)
-  const amp = Math.max(30, Math.min(58, width * 0.055))
-  return { cardW, cardH, loop, amp, spacing: loop / count, height: cardH + amp * 2 + 20 }
+  const amp = Math.max(30, Math.min(58, width * 0.055, viewportHeight * 0.055))
+  // Include the rotated corners, not only the unrotated card height.
+  const cornerAllowance = cardW * Math.sin(Math.atan(amp * 2 * Math.PI * WAVES / loop))
+  return { cardW, cardH, loop, amp, spacing: loop / count, height: cardH + amp * 2 + cornerAllowance + 16 }
 }
 
 export default function SkillWave({ items, direction = 1, phase = 0, speed = 58, hoverable }) {
@@ -25,8 +27,14 @@ export default function SkillWave({ items, direction = 1, phase = 0, speed = 58,
   const cardRefs = useRef([])
   const offset = useRef(0)
   const [width, setWidth] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight)
+  useEffect(() => {
+    const resize = () => setViewportHeight(window.innerHeight)
+    window.addEventListener('resize', resize)
+    return () => window.removeEventListener('resize', resize)
+  }, [])
 
-  const m = metricsFor(width || 1200, items.length)
+  const m = metricsFor(width || 1200, items.length, viewportHeight)
 
   useLayoutEffect(() => {
     const el = frameRef.current
@@ -39,7 +47,7 @@ export default function SkillWave({ items, direction = 1, phase = 0, speed = 58,
 
   // Place every card at its current point on the curve.
   const layout = () => {
-    const { cardW, cardH, loop, amp, spacing, height } = metricsFor(width, items.length)
+    const { cardW, cardH, loop, amp, spacing, height } = metricsFor(width, items.length, viewportHeight)
     const midY = height / 2 - cardH / 2
     for (let i = 0; i < items.length; i++) {
       const el = cardRefs.current[i]
@@ -55,11 +63,11 @@ export default function SkillWave({ items, direction = 1, phase = 0, speed = 58,
     }
   }
 
-  useLayoutEffect(layout, [width, items.length, phase])
+  useLayoutEffect(layout, [width, items.length, phase, viewportHeight])
 
   useAnimationFrame((_, delta) => {
     if (!width || delta > 200) return
-    const { loop } = metricsFor(width, items.length)
+    const { loop } = metricsFor(width, items.length, viewportHeight)
     offset.current = (((offset.current + (direction * speed * delta) / 1000) % loop) + loop) % loop
     layout()
   })

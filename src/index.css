@@ -13,6 +13,9 @@
   --color-firewatch: #49491e;
 }
 :root {
+  --page-gutter: clamp(20px, 5vw, 96px);
+  --content-width: 1440px;
+  --section-space: clamp(32px, 6svh, 72px);
   --rule: #c6cdca;
   --detail: #bec78d;
   --project-foreground: #faf8f3;
@@ -27,7 +30,7 @@ html, body {
   background: var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-body);
-  overscroll-behavior: none;
+  overscroll-behavior-x: none;
   -webkit-font-smoothing: antialiased;
 }
 body { overflow-x: clip; }
@@ -76,7 +79,13 @@ body::after {
 }
 #skills ::selection { background: var(--color-flame); color: var(--skill-ink); }
 #work { background: var(--color-cream); }
-.section-grid { min-width: 0; }
+.section-grid { min-width: 0; max-width: var(--content-width); padding-inline: var(--page-gutter); }
+.section-grid > * { min-width: 0; }
+.skills-content { max-width: 1600px; }
+.stats-grid > * { min-width: 0; overflow-wrap: anywhere; }
+.vertical-layout .chapter-section { min-height: 100svh; padding-block: var(--section-space); }
+.vertical-layout #about .section-grid { gap: clamp(28px, 5vw, 64px); }
+.vertical-layout #contact > div { min-height: calc(100svh - 2 * var(--section-space)); }
 .hero-content { padding-top: 2.5rem; padding-bottom: 2rem; }
 .hero-link { padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
 .hero-link:hover { border-color: var(--color-flame); }
@@ -127,7 +136,7 @@ body::after {
 .project-cursor-label { color: var(--color-surface); }
 .contact-footer { background: transparent; backdrop-filter: none; }
 @media (min-width: 1024px) {
-  .section-grid { max-width: 1280px; padding-inline: clamp(32px, 6vw, 96px); }
+  .section-grid { max-width: var(--content-width); padding-inline: var(--page-gutter); }
   .work-title { padding-left: max(9rem, 10vw); }
   .hero-content { gap: clamp(2rem, 4vw, 5rem); }
   .project-panel { padding-left: max(7rem, 8vw); }
@@ -152,7 +161,7 @@ body::after {
 }
 @media (max-width: 1023px) {
   .chapter-section { border-left: 0; border-top: 1px solid var(--rule); scroll-margin-top: 0; }
-  .vertical-layout .chapter-section { min-height: 100svh; padding-block: 3rem; }
+  .vertical-layout .chapter-section { min-height: 100svh; padding-block: var(--section-space); }
   .vertical-layout #home { padding-top: 0; }
   .display-xl { font-size: clamp(3.5rem, 10vw, 6rem); }
   .display-lg, .display-serif { font-size: clamp(2.6rem, 7.5vw, 4rem); }

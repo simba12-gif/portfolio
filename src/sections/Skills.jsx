@@ -59,7 +59,7 @@ export default function Skills({ active }) {
 
   return (
     <div
-      className="relative -my-10 flex flex-col justify-center overflow-hidden py-10 lg:my-0 lg:h-full lg:flex-row lg:items-center lg:py-0"
+      className="relative flex flex-col justify-center overflow-hidden lg:h-full lg:flex-row lg:items-center"
       style={{ color: INK }}
     >
       <StickerFilter />
