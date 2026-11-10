@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { FiArrowUpRight, FiGithub } from 'react-icons/fi'
 import { PROJECTS } from '../data.js'
 import './Work.css'
+import useHorizontalTouch from '../components/useHorizontalTouch.js'
 
 const COUNT = PROJECTS.length
 // App's existing strip coordinates: Work starts at 3 and ends at 8.
@@ -85,20 +86,31 @@ function DesktopWork({ progress }) {
 
 function MobileWork() {
   const root = useRef(null)
+  const track = useRef(null)
+  const [step, setStep] = useState(0)
+  useLayoutEffect(() => {
+    const el = track.current
+    const measure = () => setStep(el.children[1] ? el.children[1].offsetLeft - el.children[0].offsetLeft : el.clientWidth)
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    measure()
+    return () => observer.disconnect()
+  }, [])
+  const touchScale = useCallback(() => (root.current.offsetHeight - window.innerHeight) / (COUNT * (step || window.innerWidth)), [step])
+  useHorizontalTouch(root, touchScale)
   const { scrollYProgress } = useScroll({ target: root, offset: ['start start', 'end end'] })
   const revealProgress = useTransform(scrollYProgress, (value) => value * COUNT)
   // Move to the next column before its upward reveal begins. Keep the existing
   // single-card mobile composition without exposing the next card early.
   const stops = [0]
-  const positions = ['calc(0% - 0px)']
+  const positions = [0]
   for (let index = 1; index < COUNT; index += 1) {
     stops.push(index - 0.1, index + 0.1)
-    positions.push(`calc(-${(index - 1) * 100}% - ${(index - 1) * 20}px)`, `calc(-${index * 100}% - ${index * 20}px)`)
+    positions.push(-(index - 1) * step, -index * step)
   }
   const x = useTransform(revealProgress, stops, positions)
   const select = (index, behavior = 'smooth') => {
     const el = root.current
-    if (window.matchMedia('(max-height: 700px)').matches) return
     const start = el.getBoundingClientRect().top + window.scrollY
     window.scrollTo({ top: start + (el.offsetHeight - window.innerHeight) * revealEnd(index) / COUNT, behavior })
   }
@@ -106,7 +118,7 @@ function MobileWork() {
     <div className="process-mobile-stage">
       <Heading />
       <div className="process-window">
-        <motion.div className="process-mobile-track" style={{ x }}>
+        <motion.div ref={track} className="process-mobile-track" style={{ x }}>
           {PROJECTS.map((project, index) => <RisingCard key={project.name} project={project} index={index}
             progress={revealProgress} onFocus={() => select(index, 'instant')} />)}
         </motion.div>
@@ -118,27 +130,9 @@ function MobileWork() {
 
 export default function Work({ workProgress }) {
   const reduced = useReducedMotion()
-  const [short, setShort] = useState(() => window.matchMedia('(max-height: 700px)').matches)
-  useEffect(() => {
-    const query = window.matchMedia('(max-height: 700px)')
-    const sync = () => setShort(query.matches)
-    query.addEventListener('change', sync)
-    return () => query.removeEventListener('change', sync)
-  }, [])
   if (reduced) return <div className="process-static">
     <Heading />
     <div className="process-static-list">{PROJECTS.map((project) => <ProjectCard key={project.name} project={project} />)}</div>
-    <MoreProjects />
-  </div>
-  if (!workProgress && short) return <div className="process-static process-flow">
-    <Heading />
-    <div className="process-static-list">{PROJECTS.map((project) => (
-      <motion.div key={project.name} initial={{ y: 64, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }} viewport={{ amount: 0.15 }}
-        transition={{ duration: 0.65, ease: easeReveal }}>
-        <ProjectCard project={project} />
-      </motion.div>
-    ))}</div>
     <MoreProjects />
   </div>
   return workProgress ? <DesktopWork progress={workProgress} /> : <MobileWork />

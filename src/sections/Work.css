@@ -30,10 +30,10 @@
   .process-description { font-size: 12px; }
 }
 @media (min-width: 1024px) and (max-height: 760px) {
-  .process-desktop { padding-top: 20px; padding-bottom: 54px; }
+  .process-desktop { padding-top: 20px; padding-bottom: 20px; }
   .process-heading { margin-bottom: 20px; }
   .process-heading .display-lg { font-size: 40px; }
-  .process-project { height: max(420px, 65vh); }
+  .process-project { height: calc(100svh - 180px); }
   .process-project-link { padding: 16px; }
   .process-copy { padding-top: 10px; }
   .process-description { font-size: 12px; margin-top: 10px; }
@@ -47,9 +47,9 @@
 .process-mobile .process-heading { width: min(100%, 430px); margin-bottom: 24px; }
 .process-mobile .process-heading .display-lg { font-size: clamp(32px, 7vw, 48px); }
 .process-window { width: min(100%, 430px); overflow: clip; padding: 4px; margin: -4px; }
-.process-mobile-track { display: flex; gap: 20px; }
+.process-mobile-track { position: relative; display: flex; gap: 20px; }
 .process-mobile-track > .process-column { flex: 0 0 100%; }
-.process-mobile-track .process-project { height: min(540px, calc(100svh - 190px)); min-height: 440px; }
+.process-mobile-track .process-project { height: min(540px, calc(100svh - 190px)); }
 .process-mobile .process-copy h3 { font-size: 30px; }
 .process-mobile .process-more { margin-top: 16px; font-size: 11px; }
 @media (max-width: 360px) {
@@ -65,8 +65,18 @@
 .process-static .process-project { height: auto; min-height: 500px; }
 .process-static .process-project-link { min-height: 500px; }
 @media (max-width: 600px) { .process-static-list { grid-template-columns: 1fr; } }
-/* Short screens retain the card rise in document flow, without a clipped pin. */
-.process-flow .process-project, .process-flow .process-project-link { min-height: 460px; }
+/* Keep the pinned gallery usable on short touch viewports. */
+@media (max-width: 1023px) and (max-height: 700px) {
+  .process-mobile .process-heading { margin-bottom: 12px; }
+  .process-mobile-stage { padding-block: 12px; }
+  .process-mobile-track .process-project { height: calc(100svh - 144px); }
+  .process-mobile .process-project-link { padding: 16px; }
+  .process-mobile .process-copy { padding-top: 0; }
+  .process-mobile .process-description { margin-top: 10px; font-size: 12px; }
+  .process-mobile .process-tech { margin-top: 10px; padding-top: 8px; }
+  .process-mobile .process-live { margin-top: 12px; }
+  .process-mobile .process-source { right: 16px; bottom: 16px; }
+}
 .process-static .process-project-link { padding-bottom: 72px; }
 .process-static .process-source { bottom: 26px; }
 @media (prefers-reduced-motion: reduce) { .process-shade { transition: none; } }

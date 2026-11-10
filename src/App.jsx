@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   motion,
   useMotionValueEvent,
@@ -13,6 +13,7 @@ import Skills from './sections/Skills.jsx'
 import Work from './sections/Work.jsx'
 import Contact from './sections/Contact.jsx'
 import { PROJECTS, SECTIONS } from './data.js'
+import useHorizontalTouch from './components/useHorizontalTouch.js'
 
 const COMPONENTS = [Hero, About, Skills, Work, Contact]
 const COUNT = SECTIONS.length
@@ -39,16 +40,35 @@ const sectionAt = (coord) => {
 // The horizontal canvas is desktop-only and disabled for prefers-reduced-motion users.
 function useHorizontalMode() {
   const reduced = useReducedMotion()
+  const resumeSection = useRef(0)
   const [wide, setWide] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px) and (min-height: 700px)').matches,
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
   )
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px) and (min-height: 700px)')
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const remember = () => {
+      // Ignore geometry during the media-query change itself: CSS has already
+      // reflowed, but React has not yet switched layouts.
+      if (mq.matches !== wide) return
+      if (document.querySelector('.horizontal-viewport')) {
+        resumeSection.current = sectionAt(window.scrollY / window.innerHeight)
+      } else {
+        const visible = SECTIONS.findIndex(({ id }) => {
+          const rect = document.getElementById(id)?.getBoundingClientRect()
+          return rect && rect.top <= window.innerHeight / 2 && rect.bottom > window.innerHeight / 2
+        })
+        resumeSection.current = Math.max(0, visible)
+      }
+    }
     const onChange = (e) => setWide(e.matches)
+    window.addEventListener('scroll', remember, { passive: true })
     mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return wide && !reduced
+    return () => {
+      window.removeEventListener('scroll', remember)
+      mq.removeEventListener('change', onChange)
+    }
+  }, [wide])
+  return { horizontal: wide && !reduced, resumeSection }
 }
 
 // One continuous strip: a tall scroll wrapper drives a single translateX on the
@@ -57,6 +77,39 @@ function useHorizontalMode() {
 function HorizontalLayout() {
   const wrapperRef = useRef(null)
   const viewportRef = useRef(null)
+  const trackRef = useRef(null)
+  const [trackSize, setTrackSize] = useState(() => ({ viewport: window.innerWidth, travel: LAST * window.innerWidth }))
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    const measure = () => {
+      const width = Array.from(track.children).reduce((sum, section) => sum + section.offsetWidth, 0)
+      const viewport = viewportRef.current.clientWidth
+      setTrackSize({ viewport, travel: Math.max(0, width - viewport) })
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(track)
+    observer.observe(viewportRef.current)
+    measure()
+    return () => observer.disconnect()
+  }, [])
+  const touchScale = useCallback(() => window.innerHeight / window.innerWidth, [])
+  useHorizontalTouch(viewportRef, touchScale)
+  // Keep the same strip coordinate when the viewport height changes.
+  useEffect(() => {
+    let height = window.innerHeight
+    let position = window.scrollY / height
+    const remember = () => { position = window.scrollY / height }
+    const resize = () => {
+      height = window.innerHeight
+      window.scrollTo({ top: position * height, behavior: 'instant' })
+    }
+    window.addEventListener('scroll', remember)
+    window.addEventListener('resize', resize)
+    return () => {
+      window.removeEventListener('scroll', remember)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
   // Track the current section for keyboard and focus navigation.
   const [index, setIndex] = useState(0)
   const indexRef = useRef(0)
@@ -72,7 +125,7 @@ function HorizontalLayout() {
   const smooth = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.0001 })
   // Hold the opening composition while the portrait flips and expands.
   // Rejoin the original strip mapping at About; later chapters keep their offsets.
-  const x = useTransform(smooth, [0, 1 / LAST, 1], ['-100vw', '-100vw', `-${LAST * 100}vw`])
+  const x = useTransform(smooth, [0, 1 / LAST, 1], [-trackSize.viewport, -trackSize.viewport, -trackSize.travel])
   const heroProgress = useTransform(smooth, [0, 1 / LAST], [0, 1])
   useMotionValueEvent(scrollYProgress, 'change', (p) => {
     const scrollPosition = p * LAST
@@ -141,8 +194,9 @@ function HorizontalLayout() {
     <>
 
       <div ref={wrapperRef} style={{ height: `${TOTAL * 100}vh` }}>
-        <div ref={viewportRef} className="sticky top-0 h-screen overflow-hidden">
+        <div ref={viewportRef} className="horizontal-viewport sticky top-0 h-screen overflow-hidden">
           <motion.main
+            ref={trackRef}
             className="relative flex h-full"
             style={{ x, width: `${TOTAL * 100}vw` }}
           >
@@ -257,12 +311,18 @@ function VerticalLayout() {
 }
 
 export default function App() {
-  const horizontal = useHorizontalMode()
-  // Reset scroll position when the layout mechanism changes so the tall
-  // wrapper's leftover scroll offset doesn't strand the other layout mid-page.
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [horizontal])
+  const { horizontal, resumeSection } = useHorizontalMode()
+  // Keep the current chapter when resizing across the desktop breakpoint.
+  useLayoutEffect(() => {
+    const chapter = resumeSection.current
+    const section = document.getElementById(SECTIONS[chapter].id)
+    const runway = document.querySelector('.hero-bridge-runway')
+    const top = horizontal ? OFFSETS[chapter] * window.innerHeight
+      : chapter === 0 ? 0
+      : chapter === 1 && runway ? runway.offsetHeight
+      : section.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top, behavior: 'instant' })
+  }, [horizontal, resumeSection])
   return (
     <>
       {horizontal ? <HorizontalLayout key="h" /> : <VerticalLayout key="v" />}
