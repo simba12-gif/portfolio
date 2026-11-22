@@ -67,7 +67,7 @@ body::after {
 /* Paper tones connect the existing chapters without altering strip geometry. */
 .chapter-section { border-left: 1px solid var(--rule); }
 #home { background: var(--color-cream); }
-#about, #contact { background: #e2e7e4; }
+#contact { background: #e2e7e4; }
 #skills {
   --color-ink: #f3f5ef;
   --color-muted: #cbd2ce;
@@ -82,9 +82,7 @@ body::after {
 .section-grid { min-width: 0; max-width: var(--content-width); padding-inline: var(--page-gutter); }
 .section-grid > * { min-width: 0; }
 .skills-content { max-width: 1600px; }
-.stats-grid > * { min-width: 0; overflow-wrap: anywhere; }
 .vertical-layout .chapter-section { min-height: 100svh; padding-block: var(--section-space); }
-.vertical-layout #about .section-grid { gap: clamp(28px, 5vw, 64px); }
 .vertical-layout #contact > div { min-height: calc(100svh - 2 * var(--section-space)); }
 .hero-content { padding-top: 2.5rem; padding-bottom: 2rem; }
 .hero-link { padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
@@ -106,8 +104,6 @@ body::after {
   -webkit-text-stroke: 1px color-mix(in srgb, var(--color-ink) 25%, transparent);
 }
 .hero-status > span > span:first-child { animation: none; }
-.stats-grid { border-bottom: 1px solid var(--rule); }
-.stat-value { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.065em; }
 .skill-card { border: 1px solid var(--rule); }
 /* Existing full-screen project panels: framed images and readable foreground. */
 .project-title { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.055em; }

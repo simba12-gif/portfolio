@@ -1,9 +1,8 @@
 export const SECTIONS = [
   { id: 'home', num: '01', name: 'Home', label: '01 — HOME' },
-  { id: 'about', num: '02', name: 'About', label: '02 — ABOUT' },
-  { id: 'skills', num: '03', name: 'Skills', label: '03 — SKILLS' },
-  { id: 'work', num: '04', name: 'Work', label: '04 — WORK' },
-  { id: 'contact', num: '05', name: 'Contact', label: '05 — CONTACT' },
+  { id: 'skills', num: '02', name: 'Skills', label: '02 — SKILLS' },
+  { id: 'work', num: '03', name: 'Work', label: '03 — WORK' },
+  { id: 'contact', num: '04', name: 'Contact', label: '04 — CONTACT' },
 ]
 
 export const SKILL_GROUPS = [

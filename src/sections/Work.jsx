@@ -1,15 +1,8 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { FiArrowUpRight, FiGithub } from 'react-icons/fi'
 import { PROJECTS } from '../data.js'
 import './Work.css'
-import useHorizontalTouch from '../components/useHorizontalTouch.js'
-
-const COUNT = PROJECTS.length
-// App's existing strip coordinates: Work starts at 3 and ends at 8.
-const START = 3
-const LAST = 4 + COUNT
-
 function ProjectCard({ project, onFocus }) {
   return (
     <article className="process-project" onFocusCapture={onFocus}>
@@ -50,90 +43,28 @@ function MoreProjects() {
   </a>
 }
 
-// A small lead-in keeps the section's entry frame empty. Every card gets its
-// own scroll interval; the settled layout never depends on its reveal offset.
-const revealEnd = (index) => index + 0.85
+// Preserve the upward, scroll-linked reveal, now measured at each vertical card.
 const easeReveal = (t) => t * t * (3 - 2 * t)
 
-function RisingCard({ project, index, progress, onFocus }) {
-  const interval = [index + 0.12, revealEnd(index)]
-  const y = useTransform(progress, interval, ['100vh', '0vh'], { ease: easeReveal })
-  const opacity = useTransform(progress, interval, [0, 1], { ease: easeReveal })
-  return <motion.div className="process-column" style={{ y, opacity }}>
-    <ProjectCard project={project} onFocus={onFocus} />
-  </motion.div>
-}
-
-function DesktopWork({ progress }) {
-  // Cancel only the Work portion of the global pan, preserving every chapter's
-  // original position, navigation offset, and scroll distance.
-  const x = useTransform(progress, [START / LAST, (START + COUNT) / LAST], ['0vw', `${COUNT * 100}vw`])
-  const revealProgress = useTransform(progress, (value) => value * LAST - START)
-  const select = (index, behavior = 'smooth') => window.scrollTo({ top: (START + revealEnd(index)) * window.innerHeight, behavior })
-  const revealOnFocus = (index) => {
-    if (revealProgress.get() < revealEnd(index) - 0.01) select(index, 'instant')
-  }
-  return <motion.div className="process-desktop" style={{ x }}>
-    <Heading />
-    <div className="process-row" style={{ '--project-count': COUNT }}>
-      {PROJECTS.map((project, index) => <RisingCard key={project.name} project={project} index={index}
-        progress={revealProgress} onFocus={() => revealOnFocus(index)} />)}
-    </div>
-    <MoreProjects />
-
-  </motion.div>
-}
-
-function MobileWork() {
-  const root = useRef(null)
-  const track = useRef(null)
-  const [step, setStep] = useState(0)
-  useLayoutEffect(() => {
-    const el = track.current
-    const measure = () => setStep(el.children[1] ? el.children[1].offsetLeft - el.children[0].offsetLeft : el.clientWidth)
-    const observer = new ResizeObserver(measure)
-    observer.observe(el)
-    measure()
-    return () => observer.disconnect()
-  }, [])
-  const touchScale = useCallback(() => (root.current.offsetHeight - window.innerHeight) / (COUNT * (step || window.innerWidth)), [step])
-  useHorizontalTouch(root, touchScale)
-  const { scrollYProgress } = useScroll({ target: root, offset: ['start start', 'end end'] })
-  const revealProgress = useTransform(scrollYProgress, (value) => value * COUNT)
-  // Move to the next column before its upward reveal begins. Keep the existing
-  // single-card mobile composition without exposing the next card early.
-  const stops = [0]
-  const positions = [0]
-  for (let index = 1; index < COUNT; index += 1) {
-    stops.push(index - 0.1, index + 0.1)
-    positions.push(-(index - 1) * step, -index * step)
-  }
-  const x = useTransform(revealProgress, stops, positions)
-  const select = (index, behavior = 'smooth') => {
-    const el = root.current
-    const start = el.getBoundingClientRect().top + window.scrollY
-    window.scrollTo({ top: start + (el.offsetHeight - window.innerHeight) * revealEnd(index) / COUNT, behavior })
-  }
-  return <div ref={root} className="process-mobile" style={{ '--project-count': COUNT }}>
-    <div className="process-mobile-stage">
-      <Heading />
-      <div className="process-window">
-        <motion.div ref={track} className="process-mobile-track" style={{ x }}>
-          {PROJECTS.map((project, index) => <RisingCard key={project.name} project={project} index={index}
-            progress={revealProgress} onFocus={() => select(index, 'instant')} />)}
-        </motion.div>
-      </div>
-      <MoreProjects />
-    </div>
+function RisingCard({ project, reduced }) {
+  const slot = useRef(null)
+  const { scrollYProgress } = useScroll({ target: slot, offset: ['start end', 'start 20%'] })
+  const y = useTransform(scrollYProgress, [0.12, 0.85], ['100vh', '0vh'], { ease: easeReveal })
+  const opacity = useTransform(scrollYProgress, [0.12, 0.85], [0, 1], { ease: easeReveal })
+  return <div ref={slot} className="process-column">
+    <motion.div style={reduced ? undefined : { y, opacity }}>
+      <ProjectCard project={project} onFocus={() => slot.current?.scrollIntoView({ block: 'center', behavior: 'instant' })} />
+    </motion.div>
   </div>
 }
 
-export default function Work({ workProgress }) {
+export default function Work() {
   const reduced = useReducedMotion()
-  if (reduced) return <div className="process-static">
+  return <div className="process-vertical">
     <Heading />
-    <div className="process-static-list">{PROJECTS.map((project) => <ProjectCard key={project.name} project={project} />)}</div>
+    <div className="process-row">
+      {PROJECTS.map(project => <RisingCard key={project.name} project={project} reduced={reduced} />)}
+    </div>
     <MoreProjects />
   </div>
-  return workProgress ? <DesktopWork progress={workProgress} /> : <MobileWork />
 }

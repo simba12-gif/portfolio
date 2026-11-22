@@ -1,9 +1,9 @@
-/* Scoped to Selected Work: the reference's portrait columns and 20px gutters. */
-.process-desktop { width: 100vw; height: 100%; padding: var(--section-space) max(32px, calc((100vw - 1600px) / 2)) 32px; display: flex; flex-direction: column; justify-content: center; }
+/* Existing project cards in a responsive vertical-page grid. */
+.process-vertical { width: 100%; max-width: 1600px; margin: auto; padding: 24px 32px; }
 .process-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
 .process-heading h2 > span:first-child { color: var(--color-muted); margin-right: 0.16em; }
-.process-row { display: grid; grid-template-columns: repeat(var(--project-count), minmax(0, 1fr)); gap: 20px; }
-.process-column { min-width: 0; }
+.process-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.process-column { min-width: 0; overflow: clip; }
 .process-project { position: relative; min-width: 0; height: clamp(450px, 58vh, 550px); color: var(--project-foreground); isolation: isolate; }
 .process-project-link { position: relative; display: flex; flex-direction: column; height: 100%; padding: 26px; overflow: hidden; border-radius: 20px; border: 1px solid var(--rule); background: var(--project-background); isolation: isolate; }
 .process-project-link > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: -2; }
@@ -24,13 +24,11 @@
   .process-project-link:hover .process-shade { opacity: 0.94; }
 }
 @media (min-width: 1024px) and (max-width: 1250px) {
-  .process-desktop { padding-inline: 32px; }
   .process-project-link { padding: 16px; }
   .process-source { right: 16px; bottom: 16px; }
   .process-description { font-size: 12px; }
 }
 @media (min-width: 1024px) and (max-height: 760px) {
-  .process-desktop { padding-top: 20px; padding-bottom: 20px; }
   .process-heading { margin-bottom: 20px; }
   .process-heading .display-lg { font-size: 40px; }
   .process-project { height: calc(100svh - 180px); }
@@ -42,41 +40,17 @@
   .process-source { right: 16px; bottom: 16px; }
   .process-more { margin-top: 16px; }
 }
-.process-mobile { height: calc(100svh + var(--project-count) * 65svh); position: relative; }
-.process-mobile-stage { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-.process-mobile .process-heading { width: min(100%, 430px); margin-bottom: 24px; }
-.process-mobile .process-heading .display-lg { font-size: clamp(32px, 7vw, 48px); }
-.process-window { width: min(100%, 430px); overflow: clip; padding: 4px; margin: -4px; }
-.process-mobile-track { position: relative; display: flex; gap: 20px; }
-.process-mobile-track > .process-column { flex: 0 0 100%; }
-.process-mobile-track .process-project { height: min(540px, calc(100svh - 190px)); }
-.process-mobile .process-copy h3 { font-size: 30px; }
-.process-mobile .process-more { margin-top: 16px; font-size: 11px; }
-@media (max-width: 360px) {
-  .process-mobile .process-project-link { padding: 16px; }
-  .process-mobile .process-source { bottom: 16px; right: 16px; }
-  .process-mobile .process-copy { padding-top: 16px; }
-  .process-mobile .process-description { font-size: 12px; }
-  .process-mobile .process-tech { margin-top: 12px; padding-top: 10px; }
-  .process-mobile .process-live { margin-top: 14px; }
+@media (max-width: 1023px) {
+ .process-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .process-vertical { padding: 20px; }
 }
-.process-static { width: 100%; max-width: 1200px; margin: auto; padding: 24px; }
-.process-static-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.process-static .process-project { height: auto; min-height: 500px; }
-.process-static .process-project-link { min-height: 500px; }
-@media (max-width: 600px) { .process-static-list { grid-template-columns: 1fr; } }
-/* Keep the pinned gallery usable on short touch viewports. */
-@media (max-width: 1023px) and (max-height: 700px) {
-  .process-mobile .process-heading { margin-bottom: 12px; }
-  .process-mobile-stage { padding-block: 12px; }
-  .process-mobile-track .process-project { height: calc(100svh - 144px); }
-  .process-mobile .process-project-link { padding: 16px; }
-  .process-mobile .process-copy { padding-top: 0; }
-  .process-mobile .process-description { margin-top: 10px; font-size: 12px; }
-  .process-mobile .process-tech { margin-top: 10px; padding-top: 8px; }
-  .process-mobile .process-live { margin-top: 12px; }
-  .process-mobile .process-source { right: 16px; bottom: 16px; }
+@media (max-width: 600px) {
+ .process-row { grid-template-columns: 1fr; }
+ .process-vertical { max-width: 470px; }
+ .process-heading { margin-bottom: 24px; }
+ .process-heading .display-lg { font-size: clamp(32px, 7vw, 48px); }
+ .process-project { height: auto; min-height: 500px; }
+ .process-project-link { min-height: 500px; padding-bottom: 72px; }
+ .process-copy h3 { font-size: 30px; }
 }
-.process-static .process-project-link { padding-bottom: 72px; }
-.process-static .process-source { bottom: 26px; }
 @media (prefers-reduced-motion: reduce) { .process-shade { transition: none; } }
