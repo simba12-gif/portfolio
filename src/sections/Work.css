@@ -1,56 +1,50 @@
-/* Existing project cards in a responsive vertical-page grid. */
-.process-vertical { width: 100%; max-width: 1600px; margin: auto; padding: 24px 32px; }
-.process-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
-.process-heading h2 > span:first-child { color: var(--color-muted); margin-right: 0.16em; }
-.process-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-.process-column { min-width: 0; overflow: clip; }
-.process-project { position: relative; min-width: 0; height: clamp(450px, 58vh, 550px); color: var(--project-foreground); isolation: isolate; }
-.process-project-link { position: relative; display: flex; flex-direction: column; height: 100%; padding: 26px; overflow: hidden; border-radius: 20px; border: 1px solid var(--rule); background: var(--project-background); isolation: isolate; }
-.process-project-link > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: -2; }
-.process-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #27303820 0%, #27303870 25%, #273038ed 55%, #273038fa 100%); transition: opacity 240ms ease-out; }
-.process-copy { margin-top: auto; padding-top: 22px; }
-.process-kicker { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; line-height: 1.5; }
-.process-copy h3 { font-family: var(--font-display); font-size: clamp(22px, 2vw, 30px); font-weight: 500; letter-spacing: -0.055em; line-height: 1.1; margin-top: 8px; }
-.process-description { margin-top: 14px; font-size: 13px; line-height: 1.5; }
-.process-tech { margin-top: 16px; padding-top: 12px; border-top: 1px solid #cbd2ce55; font-family: monospace; font-size: 10px; line-height: 1.5; }
-.process-live { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-top: 20px; width: fit-content; }
-.process-source { position: absolute; bottom: 26px; right: 26px; z-index: 2; display: flex; align-items: center; gap: 5px; font-size: 11px; min-height: 44px; padding: 12px 0; margin-bottom: -12px; }
-.process-project-link:focus-visible { outline: 3px solid var(--color-flame); outline-offset: 3px; }
-.process-source:focus-visible { outline-color: var(--project-foreground); }
-.process-more { display: flex; align-items: center; gap: 10px; width: fit-content; min-height: 44px; margin-top: 20px; font-size: 12px; color: var(--color-muted); }
-.process-more:hover, .process-source:hover { text-decoration: underline; text-underline-offset: 4px; }
-@media (hover: hover) {
-  .process-project-link:hover { border-color: var(--color-flame); }
-  .process-project-link:hover .process-shade { opacity: 0.94; }
+/* ARC's split image and orbiting index, contained within this vertical chapter. */
+.arc-projects { height: calc(var(--project-count) * 100svh); position: relative; }
+.arc-stage { position: sticky; top: 0; height: 100svh; display: grid; grid-template-columns: 1fr 1fr; overflow: clip; }
+.arc-image-panel { position: relative; overflow: hidden; background: var(--project-background); }
+.arc-image-track { height: 100%; position: relative; }
+.arc-project-image { position: absolute; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.arc-image-panel h2 { position: absolute; left: 4%; bottom: 2%; margin: 0; color: var(--project-foreground); font-family: var(--font-editorial); font-size: clamp(56px, 9vw, 160px); font-weight: 400; line-height: .95; letter-spacing: -.065em; text-shadow: 0 2px 24px #0005; pointer-events: none; }
+.arc-list-panel { --orbit: min(46vw, 80svh); position: relative; background: var(--color-cream); color: var(--color-ink); overflow: hidden; }
+.arc-guide { position: absolute; border: 1px solid var(--rule); border-radius: 50%; top: 50%; left: 0; transform: translate(-50%, -50%); pointer-events: none; opacity: .5; }
+.arc-guide-outer { width: var(--orbit); aspect-ratio: 1; }
+.arc-guide-inner { width: 10%; aspect-ratio: 1; }
+.arc-view { position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; padding: 16px 8px; font-size: 10px; z-index: 3; }
+.arc-direction-controls { position: absolute; inset: 28% auto 28% calc(var(--orbit) * .29); display: flex; flex-direction: column; justify-content: space-between; z-index: 3; }
+.arc-direction-controls button { width: 44px; height: 44px; display: grid; place-items: center; font-size: 20px; }
+.arc-direction-controls button:disabled { opacity: .2; cursor: default; }
+.arc-active-dot { position: absolute; top: 50%; left: calc(var(--orbit) / 2); width: 5px; height: 5px; border-radius: 50%; background: var(--color-flame); transform: translate(-50%, -50%); box-shadow: 0 0 0 5px #64632d12; }
+.arc-name-list { position: absolute; inset: 0; }
+.arc-project-name { position: absolute; top: 50%; left: calc(var(--orbit) / 2 + 22px); text-align: left; white-space: nowrap; padding: 6px 0; margin-top: -24px; transform-origin: left center; }
+.arc-project-name > span { display: block; font-family: var(--font-display); font-size: clamp(24px, 2.4vw, 38px); font-weight: 400; line-height: 1.15; letter-spacing: -.055em; }
+.arc-project-name small { display: block; margin-top: 4px; font-size: clamp(7px, .6vw, 10px); font-weight: 400; letter-spacing: .015em; }
+.arc-project-name[aria-current] > span, .arc-project-name:hover > span { color: var(--color-flame); }
+.arc-project-name:focus-visible { outline-offset: 4px; }
+.arc-more, .arc-counter { position: absolute; bottom: 24px; font-family: monospace; font-size: 10px; color: var(--color-muted); }
+.arc-more { right: 24px; display: flex; align-items: center; gap: 6px; z-index: 3; }
+.arc-counter { left: 24px; }
+.arc-detail { font-family: var(--font-body); position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; background: var(--color-cream); color: var(--color-ink); overflow-y: auto; overscroll-behavior: contain; }
+.arc-detail::backdrop { background: var(--color-cream); }
+.arc-detail-inner { padding: 8svh 7vw; }
+.arc-back { display: block; text-transform: uppercase; text-decoration: underline; text-underline-offset: 3px; font-size: 11px; margin-bottom: 12px; }
+.arc-detail h2 { margin: 0; font-size: clamp(36px, 4vw, 64px); letter-spacing: -.055em; font-weight: 400; line-height: 1.1; }
+.arc-detail-category { margin-top: 12px; font-size: 12px; }
+.arc-detail-image { display: block; width: 100%; height: 55svh; object-fit: cover; object-position: center; margin-top: 36px; }
+.arc-detail-info { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; margin-top: 32px; font-size: 15px; line-height: 1.8; }
+.arc-detail-tech { font-family: monospace; font-size: 12px; }
+.arc-detail-links { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px; }
+.arc-detail-links a { display: inline-flex; gap: 8px; align-items: center; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 767px) {
+ .arc-stage { grid-template-columns: 1fr; grid-template-rows: 48% 52%; }
+ .arc-list-panel { --orbit: min(90vw, 75svh); }
+ .arc-image-panel h2 { font-size: clamp(52px, 13vw, 88px); }
+ .arc-project-name > span { font-size: 25px; }
+ .arc-project-name small { font-size: 7px; }
+ .arc-direction-controls { inset-block: 12%; }
+ .arc-more, .arc-counter { bottom: 10px; font-size: 8px; }
+ .arc-detail-inner { padding: 32px 6vw; }
+ .arc-detail-image { height: auto; aspect-ratio: 1.5; margin-top: 24px; }
+ .arc-detail-info { grid-template-columns: 1fr; gap: 20px; }
 }
-@media (min-width: 1024px) and (max-width: 1250px) {
-  .process-project-link { padding: 16px; }
-  .process-source { right: 16px; bottom: 16px; }
-  .process-description { font-size: 12px; }
-}
-@media (min-width: 1024px) and (max-height: 760px) {
-  .process-heading { margin-bottom: 20px; }
-  .process-heading .display-lg { font-size: 40px; }
-  .process-project { height: calc(100svh - 180px); }
-  .process-project-link { padding: 16px; }
-  .process-copy { padding-top: 10px; }
-  .process-description { font-size: 12px; margin-top: 10px; }
-  .process-tech { font-size: 9px; margin-top: 10px; padding-top: 8px; }
-  .process-live { margin-top: 12px; }
-  .process-source { right: 16px; bottom: 16px; }
-  .process-more { margin-top: 16px; }
-}
-@media (max-width: 1023px) {
- .process-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
- .process-vertical { padding: 20px; }
-}
-@media (max-width: 600px) {
- .process-row { grid-template-columns: 1fr; }
- .process-vertical { max-width: 470px; }
- .process-heading { margin-bottom: 24px; }
- .process-heading .display-lg { font-size: clamp(32px, 7vw, 48px); }
- .process-project { height: auto; min-height: 500px; }
- .process-project-link { min-height: 500px; padding-bottom: 72px; }
- .process-copy h3 { font-size: 30px; }
-}
-@media (prefers-reduced-motion: reduce) { .process-shade { transition: none; } }
+
+.arc-detail a { color: inherit; }

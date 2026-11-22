@@ -3,6 +3,7 @@
 @theme {
   --font-display: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
+  --font-sans: var(--font-body);
   --font-editorial: 'Fraunces', Georgia, serif;
   /* Chalk & Lichen; retain existing utility names throughout the portfolio. */
   --color-cream: #f0f2f1;
@@ -36,6 +37,7 @@ html, body {
 body { overflow-x: clip; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }
+button, input, textarea, select, optgroup { font-family: inherit; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--color-flame); outline-offset: 5px; }
 ::selection { background: var(--color-flame); color: var(--color-cream); }
 body::after {
